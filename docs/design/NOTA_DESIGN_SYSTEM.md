@@ -76,7 +76,7 @@ Define as CSS custom properties on `:root` and override under the dark theme cla
 | | التقارير المالية | — | accounting phase |
 | | تقرير الأرباح | /products/profit-report | exists |
 | الإدارة | المستخدمين والصلاحيات | /admins (stub) | users phase |
-| | بيانات المحل | /shop-profile | exists |
+| | بيانات المنشأة | /shop-profile | exists |
 | | النسخ الاحتياطي | /backup | exists (main PC only) |
 
 ## Screen → design file

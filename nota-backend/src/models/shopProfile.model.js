@@ -33,9 +33,9 @@ const shopProfileSchema = new mongoose.Schema(
     },
     name: {
       type: String,
-      required: [true, "اسم المتجر مطلوب"],
+      required: [true, "الاسم التجاري مطلوب"],
       trim: true,
-      maxlength: [150, "يجب ألا يزيد اسم المتجر عن 150 حرف"],
+      maxlength: [150, "يجب ألا يزيد الاسم التجاري عن 150 حرف"],
     },
     // Stage 24: from the license (read-only in the app); absent when the license has no English name.
     nameEn: {
@@ -46,20 +46,20 @@ const shopProfileSchema = new mongoose.Schema(
     address: {
       type: String,
       trim: true,
-      maxlength: [500, "يجب ألا يزيد عنوان المتجر عن 500 حرف"],
+      maxlength: [500, "يجب ألا يزيد العنوان عن 500 حرف"],
     },
     phones: {
       type: [
         {
           type: String,
           trim: true,
-          maxlength: [30, "يجب ألا يزيد رقم هاتف المتجر عن 30 حرف"],
+          maxlength: [30, "يجب ألا يزيد رقم الهاتف عن 30 حرف"],
         },
       ],
       default: [],
       validate: {
         validator: (phones) => !Array.isArray(phones) || phones.length <= MAX_PHONES,
-        message: `يمكن إضافة ${MAX_PHONES} أرقام هواتف للمتجر على الأكثر`,
+        message: `يمكن إضافة ${MAX_PHONES} أرقام هواتف للمنشأة على الأكثر`,
       },
     },
     logo: {
@@ -68,11 +68,11 @@ const shopProfileSchema = new mongoose.Schema(
       validate: [
         {
           validator: isBase64Image,
-          message: "يجب أن يكون شعار المتجر سلسلة base64 صالحة (خام أو بصيغة data URI)",
+          message: "يجب أن يكون شعار المنشأة سلسلة base64 صالحة (خام أو بصيغة data URI)",
         },
         {
           validator: (logo) => getBase64DecodedBytes(logo) <= MAX_LOGO_BYTES,
-          message: "يجب ألا يزيد حجم شعار المتجر عن 500 كيلوبايت",
+          message: "يجب ألا يزيد حجم شعار المنشأة عن 500 كيلوبايت",
         },
       ],
     },

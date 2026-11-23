@@ -65,7 +65,7 @@ export function receiptCalibrationPage(ctx: PrintContext, printerName: string): 
   ${current}
   <div class="fine" style="text-align:start;margin-top:3px">${pick(ctx, 'إن كان هامش الصندوق الأيمن والأيسر غير متساويين فاضبط الإزاحة في الإعدادات.', 'If the left and right margins of that box differ, set the offset in Settings.')}</div>
   <div class="dash"></div>
-  <div data-sample-ar style="text-align:start">مرحباً بكم في المحل — إيصال تجريبي: ٠١٢٣٤٥٦٧٨٩ جنيه</div>
+  <div data-sample-ar style="text-align:start">مرحباً بكم — إيصال تجريبي: ٠١٢٣٤٥٦٧٨٩ جنيه</div>
   <div data-sample-en dir="ltr" style="text-align:start">Welcome — sample receipt: 0123456789 EGP</div>
   <div class="barcode" data-barcode>${barcodeSvg('CAL-000001')}</div>
   <div class="fine code n" style="align-self:center">CAL-000001</div>

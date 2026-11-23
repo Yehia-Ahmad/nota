@@ -17,7 +17,7 @@
     return {
       message:
         `فيه جهاز رئيسي تاني شغال على الشبكة (${names}). ` +
-        'لازم يكون فيه جهاز رئيسي واحد بس في المحل، وإلا البيانات هتتقسم على جهازين.',
+        'لازم يكون فيه جهاز رئيسي واحد بس، وإلا البيانات هتتقسم على جهازين.',
       prefill: { host: others[0].address, port: others[0].port, shopName: others[0].shopName || '' },
       count: others.length,
     };

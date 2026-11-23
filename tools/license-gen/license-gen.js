@@ -2,7 +2,7 @@
 // Nota vendor license tool (Stage 24). Runs on the vendor's own PC only. Never ships with the app.
 //
 //   node license-gen.js keygen --out <dir>
-//   node license-gen.js issue  --key <private.pem> --machine XXXX-XXXX-XXXX-XXXX --shop "اسم المحل" [--shop-en "Name"] --max-clients N [--out file.lic]
+//   node license-gen.js issue  --key <private.pem> --machine XXXX-XXXX-XXXX-XXXX --shop "الاسم التجاري" [--shop-en "Name"] --max-clients N [--out file.lic]
 //   node license-gen.js verify --pub <public.pem> <file.lic>
 //
 // The license text format comes from the backend's own module, so what this tool issues is exactly what the backend checks.
@@ -64,7 +64,7 @@ const issue = (flags) => {
     issuedAt: new Date().toISOString(),
   };
   const problem = payloadProblem(payload);
-  if (problem) fail(`the license would be invalid (${problem}): check the shop name length and --max-clients (0 to 1000)`);
+  if (problem) fail(`the license would be invalid (${problem}): check the business name length and --max-clients (0 to 1000)`);
   const bytes = encodePayload(payload);
   const text = buildText(bytes, crypto.sign(null, bytes, privateKey));
   if (out) fs.writeFileSync(path.resolve(out), `${text}\n`, "utf8");

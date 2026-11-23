@@ -84,14 +84,14 @@ function diskFree(dir) {
 
 const README = `Nota diagnostics file / ملف تشخيص نوتة
 
-This file helps support understand a problem. It was made on the shop's PC by an owner or manager and saved where they chose.
+This file helps support understand a problem. It was made on the PC by an owner or manager and saved where they chose.
 It contains: app/Windows versions, this PC's settings (no secrets), license id, the status page, the data version, backup file names and
 dates (no data), and the last part of the program logs with passwords, tokens, license text, e-mails and phone numbers removed.
 
 It does NOT contain: the database, invoices, customers, prices, backups, passwords, the license text, or any key.
 Nothing was sent anywhere: the owner chooses whether to send this file.
 
-هذا الملف يساعد الدعم الفني على فهم المشكلة. أنشأه المالك أو المدير على جهاز المحل وحفظه في المكان الذي اختاره.
+هذا الملف يساعد الدعم الفني على فهم المشكلة. أنشأه المالك أو المدير على الجهاز وحفظه في المكان الذي اختاره.
 يحتوي على: إصدارات البرنامج وويندوز، إعدادات هذا الجهاز (بدون أسرار)، رقم الترخيص، حالة البرنامج، إصدار البيانات، أسماء ملفات
 النسخ الاحتياطي وتواريخها (بدون بيانات)، وآخر جزء من سجلات البرنامج بعد حذف كلمات السر والرموز ونص الترخيص والبريد والهواتف.
 لا يحتوي على: قاعدة البيانات أو الفواتير أو العملاء أو الأسعار أو النسخ الاحتياطية أو كلمات السر أو نص الترخيص أو أي مفتاح.

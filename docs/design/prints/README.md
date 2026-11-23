@@ -4,7 +4,7 @@ Source files from the Nota design canvas ("المطبوعات" page). They are d
 Each file is one document. `PrHeader` and `PrFooter` are shared components, imported with
 `<dc-import name="PrHeader" …>`; their props are the attributes. `{{…}}` and `<sc-for>` are the canvas
 template syntax: read them as "repeat this row for each item". Inline styles and the `<helmet><style>` block
-are the visual spec (colors, sizes, borders, spacing). The sample data is the shop from nota-test-data.xlsx.
+are the visual spec (colors, sizes, borders, spacing). The sample data is the business from nota-test-data.xlsx.
 
 | File | Document | Paper | Number |
 |---|---|---|---|

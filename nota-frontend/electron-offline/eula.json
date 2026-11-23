@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "draft": false,
   "contact": {
     "ar": "للدعم الفني والتراخيص: 01028647164 (موبايل / واتساب)",
@@ -8,11 +8,11 @@
   "ar": {
     "title": "اتفاقية ترخيص استخدام برنامج «نوتة»",
     "paragraphs": [
-      "١. الترخيص: برنامج «نوتة» مُرخَّص للاستخدام ولا يُباع. يُمنح الترخيص لمحل واحد وللجهاز الرئيسي الذي صدر له، مع عدد الأجهزة الفرعية المذكور في الترخيص. الترخيص مدى الحياة ولا ينتهي بتاريخ.",
-      "٢. حظر النسخ والبيع والمشاركة: لا يجوز نسخ البرنامج أو الترخيص إلى جهاز آخر، ولا بيعه أو تأجيره أو مشاركته مع محل أو شخص آخر.",
+      "١. الترخيص: برنامج «نوتة» مُرخَّص للاستخدام ولا يُباع. يُمنح الترخيص لمنشأة واحدة وللجهاز الرئيسي الذي صدر له، مع عدد الأجهزة الفرعية المذكور في الترخيص. الترخيص مدى الحياة ولا ينتهي بتاريخ.",
+      "٢. حظر النسخ والبيع والمشاركة: لا يجوز نسخ البرنامج أو الترخيص إلى جهاز آخر، ولا بيعه أو تأجيره أو مشاركته مع منشأة أو شخص آخر.",
       "٣. حظر الهندسة العكسية: لا يجوز فك البرنامج أو تعديل ملفاته أو تجاوز الترخيص أو وسائل الحماية، ولا فتح قاعدة البيانات بأدوات أخرى.",
-      "٤. ملكية البيانات: بيانات المحل (الفواتير والعملاء والحسابات) ملك للمحل وتُحفظ على أجهزته. لا يطّلع المورّد عليها ولا يحصل على نسخة منها إلا بطلب صريح من صاحب المحل لغرض الدعم الفني.",
-      "٥. النسخ الاحتياطي: يُنشئ البرنامج نسخة احتياطية يومية، ويتحمّل صاحب المحل مسؤولية الاحتفاظ بنسخة خارج الجهاز.",
+      "٤. ملكية البيانات: بيانات المنشأة (الفواتير والعملاء والحسابات) ملك للمنشأة وتُحفظ على أجهزتها. لا يطّلع المورّد عليها ولا يحصل على نسخة منها إلا بطلب صريح من المالك لغرض الدعم الفني.",
+      "٥. النسخ الاحتياطي: يُنشئ البرنامج نسخة احتياطية يومية، ويتحمّل المالك مسؤولية الاحتفاظ بنسخة خارج الجهاز.",
       "٦. ارتباط الترخيص بالجهاز: إعادة تثبيت ويندوز على الجهاز الرئيسي تغيّر رقم الجهاز، ويُرسَل الرقم الجديد إلى المورّد لإصدار ترخيص جديد. لا تتأثر البيانات المحفوظة على الجهاز.",
       "٧. التحديثات: يجوز للمورّد إصدار تحديثات للبرنامج، دون التزام بإصدارها أو بمدة معيّنة.",
       "٨. حدود المسؤولية: يُقدَّم البرنامج «كما هو». لا يتحمّل المورّد مسؤولية الخسائر الناتجة عن استخدامه، إلا في الحدود التي يفرضها القانون.",
@@ -24,11 +24,11 @@
   "en": {
     "title": "Nota License Agreement",
     "paragraphs": [
-      "1. License. Nota is licensed, not sold. The license is granted to one shop and to the main PC it was issued for, with the number of client PCs stated in the license. It is a lifetime license with no expiry date.",
-      "2. No copying, resale or sharing. You may not copy the software or the license to another PC, or sell, rent or share it with another shop or person.",
+      "1. License. Nota is licensed, not sold. The license is granted to one business and to the main PC it was issued for, with the number of client PCs stated in the license. It is a lifetime license with no expiry date.",
+      "2. No copying, resale or sharing. You may not copy the software or the license to another PC, or sell, rent or share it with another business or person.",
       "3. No reverse engineering. You may not decompile the software, modify its files, bypass the license or the protection, or open the database with other tools.",
-      "4. Data ownership. The shop's data (invoices, customers, accounts) belongs to the shop and stays on its PCs. The vendor does not access it or receive a copy unless the shop owner explicitly asks for support.",
-      "5. Backups. The software makes a daily backup; the shop owner is responsible for keeping a copy outside the PC.",
+      "4. Data ownership. The business data (invoices, customers, accounts) belongs to the business and stays on its PCs. The vendor does not access it or receive a copy unless the owner explicitly asks for support.",
+      "5. Backups. The software makes a daily backup; the owner is responsible for keeping a copy outside the PC.",
       "6. The license is tied to the PC. Reinstalling Windows on the main PC changes its ID; send the new ID to the vendor to get a new license. Data on the PC is not affected.",
       "7. Updates. The vendor may release updates, without any obligation to release them or for any period.",
       "8. Limitation of liability. The software is provided \"as is\". The vendor is not liable for losses arising from its use, except where the law requires otherwise.",

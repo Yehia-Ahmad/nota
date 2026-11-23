@@ -121,7 +121,7 @@ ${entry.ar.map((line) => `- ${line}`).join('\n')}
 ${entry.en.map((line) => `- ${line}`).join('\n')}
 
 ## Files next to this note
-- \`${installer}.sha256\`: check it on the shop's PC with \`certutil -hashfile ${installer} SHA256\`
+- \`${installer}.sha256\`: check it on the PC with \`certutil -hashfile ${installer} SHA256\`
 - \`sourcemaps/\`: the source maps and bundle text of the backend, to read a stack trace from a support file (\`node scripts/offline/decode-stack.js stack.txt release-offline/${version}/sourcemaps\`). They are NOT inside the installer. Keep them for as long as this version is in use.
 `;
 }

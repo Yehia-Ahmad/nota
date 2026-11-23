@@ -56,7 +56,7 @@ const LABELS: Record<string, string> = {
   'products.manage': 'إدارة المنتجات', 'products.viewCost': 'عرض سعر الشراء والربح',
   'products.syncPrice': 'مزامنة سعر الشراء مع الفواتير', 'products.importExport': 'استيراد وتصدير Excel',
   'categories.manage': 'إدارة الفئات', 'reports.profit': 'تقارير الأرباح', 'dashboard.view': 'عرض لوحة التحكم',
-  'shop.manage': 'إدارة بيانات المتجر', 'users.manage': 'إدارة المستخدمين والصلاحيات', 'audit.view': 'عرض سجل العمليات',
+  'shop.manage': 'إدارة بيانات المنشأة', 'users.manage': 'إدارة المستخدمين والصلاحيات', 'audit.view': 'عرض سجل العمليات',
   'backup.manage': 'النسخ الاحتياطي والاستعادة', 'vat.file': 'تقديم الإقرار الضريبي وسداد الضريبة',
   'cashbox.view': 'عرض الخزائن وأرصدتها', 'cashbox.manage': 'إدارة الخزائن والتحويلات', 'shift.operate': 'فتح وإغلاق ورديتك',
   'shift.manage': 'عرض كل الورديات وإغلاق وردية غيرك', 'expenses.create': 'تسجيل مصروف', 'expenses.manage': 'إلغاء المصروفات وإدارة البنود', 'owner.drawings': 'سحب المالك',

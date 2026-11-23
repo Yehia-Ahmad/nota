@@ -109,11 +109,11 @@ Var pid
       Abort
     ${EndIf}
     ${If} $LANGUAGE == ${NOTA_LANG_ARABIC}
-      ${NSD_CreateLabel} 0 0 100% 48u "سيتم حذف برنامج نوتة من هذا الجهاز، لكن بيانات المحل (الفواتير والعملاء والنسخ الاحتياطية والترخيص) تبقى محفوظة في C:\ProgramData\Nota لتستخدمها إذا أعدت تثبيت البرنامج."
+      ${NSD_CreateLabel} 0 0 100% 48u "سيتم حذف برنامج نوتة من هذا الجهاز، لكن بيانات المنشأة (الفواتير والعملاء والنسخ الاحتياطية والترخيص) تبقى محفوظة في C:\ProgramData\Nota لتستخدمها إذا أعدت تثبيت البرنامج."
       Pop $0
       ${NSD_CreateCheckbox} 0 56u 100% 24u "احذف كل بياناتي أيضاً (لا يمكن التراجع)"
     ${Else}
-      ${NSD_CreateLabel} 0 0 100% 48u "Nota will be removed from this PC, but the shop's data (invoices, customers, backups and the license) stays in C:\ProgramData\Nota so you can use it if you install Nota again."
+      ${NSD_CreateLabel} 0 0 100% 48u "Nota will be removed from this PC, but the business data (invoices, customers, backups and the license) stays in C:\ProgramData\Nota so you can use it if you install Nota again."
       Pop $0
       ${NSD_CreateCheckbox} 0 56u 100% 24u "Also delete all my data (this cannot be undone)"
     ${EndIf}
@@ -128,9 +128,9 @@ Var pid
     ${If} $0 == ${BST_CHECKED}
       StrCpy $notaDeleteChecked "1"
       ${If} $LANGUAGE == ${NOTA_LANG_ARABIC}
-        MessageBox MB_YESNO|MB_ICONEXCLAMATION|MB_DEFBUTTON2 "تأكيد أخير: سيتم حذف كل بيانات المحل من هذا الجهاز نهائياً (الفواتير والعملاء والحسابات والنسخ الاحتياطية). لا يمكن استرجاعها بعد ذلك إلا من نسخة احتياطية خارج هذا الجهاز.$\r$\n$\r$\nهل تريد حذف كل شيء؟" IDYES nota_confirmed
+        MessageBox MB_YESNO|MB_ICONEXCLAMATION|MB_DEFBUTTON2 "تأكيد أخير: سيتم حذف كل بيانات المنشأة من هذا الجهاز نهائياً (الفواتير والعملاء والحسابات والنسخ الاحتياطية). لا يمكن استرجاعها بعد ذلك إلا من نسخة احتياطية خارج هذا الجهاز.$\r$\n$\r$\nهل تريد حذف كل شيء؟" IDYES nota_confirmed
       ${Else}
-        MessageBox MB_YESNO|MB_ICONEXCLAMATION|MB_DEFBUTTON2 "Last confirmation: ALL the shop's data (invoices, customers, accounts and backups) will be deleted from this PC for good. It can only be recovered from a backup kept outside this PC.$\r$\n$\r$\nDelete everything?" IDYES nota_confirmed
+        MessageBox MB_YESNO|MB_ICONEXCLAMATION|MB_DEFBUTTON2 "Last confirmation: ALL the business data (invoices, customers, accounts and backups) will be deleted from this PC for good. It can only be recovered from a backup kept outside this PC.$\r$\n$\r$\nDelete everything?" IDYES nota_confirmed
       ${EndIf}
       ; No: stay on the page, nothing is deleted
       StrCpy $notaDeleteChecked "0"
@@ -167,7 +167,7 @@ Var pid
     ${If} $R9 == ""
       StrCpy $R9 "C:\ProgramData"
     ${EndIf}
-    DetailPrint "Deleting the shop data folder $R9\Nota..."
+    DetailPrint "Deleting the Nota data folder $R9\Nota..."
     !insertmacro notaDeleteDataFolder $R9
   ${EndIf}
 !macroend

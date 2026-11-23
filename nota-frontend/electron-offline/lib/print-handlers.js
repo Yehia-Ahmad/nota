@@ -8,11 +8,13 @@
 //   print:test-page      shop.manage  a test page on the chosen printer
 //   print:print          SESSION      "طباعة"
 //   print:labels         products.printLabels  barcode-label jobs
-//   print:pdf            SESSION      "حفظ PDF"
+//   print:pdf            LOCAL_SESSION "حفظ PDF" (no printer and no backend round-trip)
 //
 // The main process never fetches document data: the page sends the finished HTML, which was built
 // from API responses the backend already filtered by permission (cost fields, journal lines ...).
 // The token is checked here so a stray page cannot drive printers or write files without a session.
+// PDF export validates the token locally because it only writes the already-rendered HTML chosen by
+// the signed-in page; every printer action and permission-bearing action still checks the backend.
 // Results are { ok: true, value } or { ok: false, error: { message, code } }.
 
 const { GuardError, IPC_RULES, checkCaller } = require('./ipc-guard');

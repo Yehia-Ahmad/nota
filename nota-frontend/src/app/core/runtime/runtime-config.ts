@@ -160,7 +160,8 @@ export interface DesktopPrintJob {
 
 /**
  * Stage 23: printing. The first argument is always the page's session token (checked in the main process:
- * SESSION_EXPIRED / FORBIDDEN). Results are { ok, value } / { ok: false, error }.
+ * SESSION_EXPIRED / FORBIDDEN). PDF export validates it locally so saving an already-rendered file does
+ * not depend on a printer or a backend round-trip. Results are { ok, value } / { ok: false, error }.
  */
 export interface DesktopPrintBridge {
   printers(token: string | null): Promise<DesktopResult<DesktopPrinter[]>>;

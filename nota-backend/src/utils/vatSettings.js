@@ -36,7 +36,7 @@ const readVatUpdate = (input, current, taxNumber) => {
     next.pricesIncludeVat = input.pricesIncludeVat;
   }
   if (next.enabled && !String(taxNumber || "").trim()) {
-    throw vatError(400, "TAX_NUMBER_REQUIRED", "لازم تسجّل الرقم الضريبي للمحل قبل تفعيل الضريبة");
+    throw vatError(400, "TAX_NUMBER_REQUIRED", "لازم تسجّل الرقم الضريبي للمنشأة قبل تفعيل الضريبة");
   }
   const $set = { "vat.enabled": next.enabled, "vat.rate": next.rate, "vat.pricesIncludeVat": next.pricesIncludeVat };
   if (next.enabled && !stored.enabled) $set["vat.startDate"] = localDayAsUtc(now());

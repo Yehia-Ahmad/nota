@@ -5,7 +5,7 @@ import { NotaButtonDirective } from '../shared/ui';
 import { OpeningService } from './opening.service';
 
 /**
- * Stage 18: the dashboard banner "لسه مسجلتش رصيد بداية المحل". The dashboard shows it only to users with
+ * Stage 18: the dashboard banner "لسه مسجلتش الرصيد الافتتاحي". The dashboard shows it only to users with
  * accounting.manage (and accounting.view, which the status request needs) while the opening is still in `setup`.
  * A failed request shows nothing: the banner is a nudge, never an error.
  */

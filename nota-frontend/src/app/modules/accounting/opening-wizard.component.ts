@@ -72,7 +72,7 @@ export function computeReview(input: ReviewInput): ReviewTotals {
 }
 
 /**
- * Stage 18: the opening-balance wizard "رصيد بداية المحل" (docs/design/screens/Opening.dc.html).
+ * Stage 18: the opening-balance wizard "الرصيد الافتتاحي" (docs/design/screens/Opening.dc.html).
  * Steps: الخزائن → المخزون → العملاء → الموردين → المراجعة. Saving can be repeated (the backend reverses the
  * current opening entry and posts a new one); finalizing makes it read-only for good.
  */

@@ -263,7 +263,7 @@ const partyOf = (type, party) => ({ partyType: type, partyId: party._id, partyNa
 const saveOpening = async (body, { session, actor = null }) => {
   const meta = await getOpeningMeta(session);
   if (!meta.ledgerStartAt) throw httpError(409, "بداية الدفاتر غير مسجلة بعد", { code: "LEDGER_NOT_STARTED" });
-  if (meta.opening?.status === "finalized") throw httpError(409, "رصيد البداية معتمد نهائيًا ولا يمكن تعديله", { code: "OPENING_FINALIZED" });
+  if (meta.opening?.status === "finalized") throw httpError(409, "الرصيد الافتتاحي معتمد نهائيًا ولا يمكن تعديله", { code: "OPENING_FINALIZED" });
   const input = body && typeof body === "object" ? body : {};
   const cash = parseAmount(input.cash, "الخزنة");
   const fixedAssets = parseAmount(input.fixedAssets, "الأصول الثابتة");
@@ -366,7 +366,7 @@ const saveOpening = async (body, { session, actor = null }) => {
 
 const finalizeOpening = async ({ session, actor = null }) => {
   const meta = await getOpeningMeta(session);
-  if (meta.opening?.status === "finalized") throw httpError(409, "رصيد البداية معتمد نهائيًا", { code: "OPENING_FINALIZED" });
+  if (meta.opening?.status === "finalized") throw httpError(409, "الرصيد الافتتاحي معتمد نهائيًا", { code: "OPENING_FINALIZED" });
   if (!meta.opening?.savedAt) throw httpError(409, "احفظ الأرصدة قبل اعتمادها نهائيًا", { code: "OPENING_NOT_SAVED" });
   const finalizedAt = new Date();
   await Meta.updateOne({ _id: "schema" }, { $set: { "opening.status": "finalized", "opening.finalizedAt": finalizedAt, ...(actor ? { "opening.finalizedBy": actor._id, "opening.finalizedByName": actor.name } : {}) } }, { session });

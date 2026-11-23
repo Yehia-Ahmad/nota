@@ -153,8 +153,8 @@ test("PUT rejects invalid profiles with 400", async () => {
   // Valid base64 (length is a multiple of 4) that decodes to just over 500 KB.
   const oversizedLogo = `data:image/png;base64,${"AAAA".repeat(Math.ceil((500 * 1024) / 3) + 1)}`;
   const cases = [
-    ["missing name", { address: "No name" }, "اسم المتجر مطلوب"],
-    ["blank name", { name: "   " }, "اسم المتجر مطلوب"],
+    ["missing name", { address: "No name" }, "الاسم التجاري مطلوب"],
+    ["blank name", { name: "   " }, "الاسم التجاري مطلوب"],
     ["name over 150", { name: "n".repeat(151) }, "150"],
     ["more than 3 phones", { name: "Shop", phones: ["1", "2", "3", "4"] }, "3"],
     ["phone over 30", { name: "Shop", phones: ["1".repeat(31)] }, "30"],

@@ -820,24 +820,24 @@
         "commercialRegister": "Commercial Reg."
     },
     "shopProfilePage": {
-        "title": "Shop Profile",
+        "title": "Business Details",
         "subtitle": "These details appear in the header and footer of printed invoices.",
-        "loading": "Loading shop profile...",
+        "loading": "Loading business details...",
         "fields": {
-            "name": "Shop name",
+            "name": "Business name",
             "address": "Address",
             "phones": "Phone numbers",
             "phone": "Phone",
             "taxNumber": "Tax number",
             "commercialRegister": "Commercial register",
             "invoiceFooter": "Invoice footer",
-            "logo": "Shop logo"
+            "logo": "Business logo"
         },
         "hints": {
             "invoiceFooter": "Text printed at the bottom of every invoice, such as a return policy or a thank-you note."
         },
         "validation": {
-            "nameRequired": "Shop name is required"
+            "nameRequired": "Business name is required"
         },
         "logo": {
             "none": "No logo",
@@ -856,9 +856,9 @@
             "saving": "Saving..."
         },
         "messages": {
-            "saved": "Shop profile saved",
-            "saveFailed": "Could not save the shop profile",
-            "loadFailed": "Could not load the shop profile. You can enter it and save it again."
+            "saved": "Business details saved",
+            "saveFailed": "Could not save the business details",
+            "loadFailed": "Could not load the business details. You can enter it and save it again."
         },
         "s11": {
             "cancel": "Cancel",
@@ -898,7 +898,7 @@
             "reports": "Financial reports",
             "profit": "Profit report",
             "users": "Users & permissions",
-            "shop": "Shop profile",
+            "shop": "Business details",
             "audit": "Audit log",
             "websiteSettings": "Website settings",
             "deliveryZones": "Delivery zones",
@@ -1030,9 +1030,9 @@
         },
         "empty": {
             "welcomeTitle": "Welcome to Nota",
-            "welcomeText": "Start by adding your products and shop details, then make your first invoice.",
+            "welcomeText": "Start by adding your products and business details, then make your first invoice.",
             "addProducts": "Add products",
-            "shopProfile": "Shop profile",
+            "shopProfile": "Business details",
             "noWeekSales": "No sales in the last 7 days",
             "noWeekSalesText": "The chart appears with the first invoice.",
             "noLowStock": "Every product is above its alert level",
@@ -1051,7 +1051,7 @@
         "sessionExpired": "Your session ended. Please sign in again.",
         "noPagePermission": "You don't have permission to open this page",
         "brand": {
-            "headline": "All your shop's books in one place",
+            "headline": "All your business's books in one place",
             "tagline": "Sales, stock and credit, from any browser."
         },
         "unreachable": {
@@ -1060,7 +1060,7 @@
         },
         "login": {
             "title": "Sign in",
-            "lead": "Enter the username and password the shop owner gave you.",
+            "lead": "Enter the username and password the owner gave you.",
             "submit": "Sign in",
             "forgotHelp": "Forgot your password? Ask the shop owner to change it from the Users page. If you are the owner, ask whoever manages the server to run recover-owner."
         },
@@ -1127,7 +1127,7 @@
         },
         "noAccess": {
             "title": "No pages for your account",
-            "text": "Your account ({{name}}) can't open any page. Ask the shop owner to set your permissions."
+            "text": "Your account ({{name}}) can't open any page. Ask the owner to set your permissions."
         },
         "locked": {
             "default": "Needs a manager or owner permission",
@@ -1343,7 +1343,7 @@
             "category.import": "Categories imported from Excel",
             "category.deleted": "Category deleted",
             "customer.deleted": "Customer deleted",
-            "shop.updated": "Shop profile edited",
+            "shop.updated": "Business details edited",
             "backup.created": "Backup created",
             "backup.restored": "Backup restored",
             "backup.restore_failed": "Backup restore failed",
@@ -1357,7 +1357,7 @@
             "ReturnLog": "Return",
             "Product": "Product",
             "Category": "Category",
-            "ShopProfile": "Shop profile"
+            "ShopProfile": "Business details"
         },
         "details": {
             "username": "Username",
@@ -1447,8 +1447,8 @@
         "closingExcluded": "Year-end closing entries are excluded here so the figures match the income statement."
     },
     "openingWizard": {
-        "title": "Shop opening balances",
-        "subtitle": "Tell us what the shop has today, so every account starts right",
+        "title": "Opening balances",
+        "subtitle": "Tell us what you have today, so every account starts right",
         "loading": "Loading…",
         "loadFailed": "Could not load the opening balances.",
         "retry": "Retry",
@@ -1539,7 +1539,7 @@
             "total": "Total",
             "suppliers": "Money owed to suppliers ({{count}})",
             "customerCredits": "Customer credits (we owe them)",
-            "capital": "Shop capital",
+            "capital": "Business capital",
             "have": "You have",
             "owe": "You owe",
             "note": "One opening entry is posted dated the ledger start. After that every sale and expense posts by itself.",
@@ -1560,7 +1560,7 @@
             "saveFailed": "Could not save the opening balances."
         },
         "banner": {
-            "text": "You have not recorded the shop opening balances yet",
+            "text": "You have not recorded the opening balances yet",
             "action": "Record them"
         }
     },
@@ -2071,12 +2071,12 @@
         "settings": {
             "title": "VAT",
             "enabled": "Enable value-added tax",
-            "enabledHint": "Optional. A shop with VAT off sees and posts exactly what it always did. Turning it on applies from today and does not touch older invoices.",
-            "taxNumberRequired": "Enter the shop's tax number (above) before turning VAT on.",
+            "enabledHint": "Optional. A business with VAT off sees and posts exactly what it always did. Turning it on applies from today and does not touch older invoices.",
+            "taxNumberRequired": "Enter the business tax number (above) before turning VAT on.",
             "rate": "VAT rate %",
             "rateHint": "0 to 100, two decimals. A new rate applies to new documents only.",
             "rateInvalid": "The rate must be between 0 and 100 with at most two decimals",
-            "pricing": "Shop prices",
+            "pricing": "Prices",
             "pricesInclude": "Prices include VAT (the normal retail case)",
             "pricesExclude": "Prices exclude VAT (the tax is added on top)",
             "startDate": "VAT applies from"
@@ -2102,7 +2102,7 @@
         "purchase": {
             "registered": "Supplier is VAT registered",
             "amount": "Invoice VAT ({{rate}}% of the net)",
-            "amountHint": "Computed at the shop rate on the invoice total without VAT. Edit it to match the supplier's printed invoice.",
+            "amountHint": "Computed at the saved VAT rate on the invoice total without VAT. Edit it to match the supplier's printed invoice.",
             "invalid": "VAT must be between 0 and the invoice total",
             "input": "Recoverable input VAT",
             "returnVat": "Returned net {{net}} + its VAT share {{vat}}"
@@ -2117,7 +2117,7 @@
             "title": "VAT return",
             "subtitle": "Output VAT − input VAT = what you pay; when input VAT is larger the difference is in your favour and carries to next month.",
             "loadFailed": "Could not load the VAT returns",
-            "off": "VAT is not enabled for this shop. Turn it on in the shop profile.",
+            "off": "VAT is not enabled. Turn it on in the business details.",
             "period": "Month",
             "output": "Sales VAT (output)",
             "input": "Purchases VAT (input)",

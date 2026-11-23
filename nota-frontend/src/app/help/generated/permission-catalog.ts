@@ -223,8 +223,8 @@ export const PERMISSION_CATALOG: HelpPermissionCatalog = {
     },
     "shop.manage": {
       "group": "admin",
-      "ar": "إدارة بيانات المتجر",
-      "en": "Manage shop profile"
+      "ar": "إدارة بيانات المنشأة",
+      "en": "Manage business details"
     },
     "users.manage": {
       "group": "admin",

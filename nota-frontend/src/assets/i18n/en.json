@@ -1424,7 +1424,7 @@
         "closingExcluded": "Year-end closing entries are excluded here so the figures match the income statement."
     },
     "openingWizard": {
-        "title": "Shop opening balances",
+        "title": "Opening balances",
         "subtitle": "Tell us what the shop has today, so every account starts right",
         "loading": "Loading…",
         "loadFailed": "Could not load the opening balances.",
@@ -1537,7 +1537,7 @@
             "saveFailed": "Could not save the opening balances."
         },
         "banner": {
-            "text": "You have not recorded the shop opening balances yet",
+            "text": "You have not recorded the opening balances yet",
             "action": "Record them"
         }
     },

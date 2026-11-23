@@ -584,7 +584,7 @@ const saveOpeningHandler = async (req, res) => {
     return saved;
   });
   const state = await loadOpeningState();
-  res.json({ message: "تم حفظ أرصدة بداية المحل", number: result.number, ...state });
+  res.json({ message: "تم حفظ الأرصدة الافتتاحية", number: result.number, ...state });
 };
 
 const finalizeOpeningHandler = async (req, res) => {
@@ -596,7 +596,7 @@ const finalizeOpeningHandler = async (req, res) => {
     return done;
   });
   const state = await loadOpeningState();
-  res.json({ message: "تم اعتماد أرصدة بداية المحل نهائيًا", finalizedAt: result.finalizedAt, ...state });
+  res.json({ message: "تم اعتماد الأرصدة الافتتاحية نهائيًا", finalizedAt: result.finalizedAt, ...state });
 };
 
 module.exports = { getAccounts, getLedger, getJournal, getJournalEntry, getHealth, computeHealth, parseQueryDate, getOpening, saveOpening: saveOpeningHandler, finalizeOpening: finalizeOpeningHandler };

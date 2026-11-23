@@ -36,7 +36,7 @@ describe('OpeningBannerComponent (dashboard banner)', () => {
     return fixture;
   };
 
-  it('shows "لسه مسجلتش رصيد بداية المحل" while the status is setup, with a link to the wizard', async () => {
+  it('shows "لسه مسجلتش الرصيد الافتتاحي" while the status is setup, with a link to the wizard', async () => {
     const fixture = setup(['accounting.manage', 'accounting.view']);
     http.expectOne(`${base}accounting/opening`).flush({ status: 'setup' });
     fixture.detectChanges();

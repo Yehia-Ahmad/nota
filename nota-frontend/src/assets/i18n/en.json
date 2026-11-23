@@ -2621,7 +2621,7 @@
         "returnsPolicy": "Returns policy",
         "terms": "Terms and conditions",
         "privacyPolicy": "Privacy policy",
-        "privacyPolicyHint": "Leave empty and the site writes a ready text from the shop name, phone and address, shown at /privacy."
+        "privacyPolicyHint": "Leave empty and the site writes a ready text from the business name, phone and address in the business details, shown at /privacy."
       }
     },
     "zones": {

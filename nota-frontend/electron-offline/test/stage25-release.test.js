@@ -29,6 +29,24 @@ const keygen = (name) => {
   return dir;
 };
 const TEST_PEM = require(path.join(BACKEND, 'src', 'license', 'test-key.js')).TEST_PUBLIC_KEY_PEM;
+// Policy: keys.js holds either the placeholder or exactly one valid Ed25519 public key (the vendor production key); never the test key or the verification key.
+const repoKey = () => {
+  const text = fs.readFileSync(path.join(BACKEND, 'src', 'license', 'keys.js'), 'utf8');
+  const literal = /const PRODUCTION_PUBLIC_KEY_PEM = `([^`]*)`;/.exec(text);
+  assert.ok(literal, 'keys.js has the PRODUCTION_PUBLIC_KEY_PEM literal');
+  const placeholder = literal[1].replace(/\s+/g, '') === '-----BEGINPUBLICKEY-----${PLACEHOLDER_MARKER}-----ENDPUBLICKEY-----';
+  const fingerprint = placeholder ? null : releaseKey.fingerprintOfLiteral(literal[1]);
+  return { text, placeholder, fingerprint, blocks: (literal[1].match(/-----BEGIN /g) || []).length };
+};
+const assertRepoKeyPolicy = () => {
+  const key = repoKey();
+  if (key.placeholder) return key;
+  assert.equal(key.blocks, 1, 'exactly one public key block');
+  assert.match(key.fingerprint || '', /^[0-9a-f]{64}$/, 'a valid Ed25519 public key');
+  assert.notEqual(key.fingerprint, releaseKey.testKeyFingerprint(BACKEND), 'never the test key');
+  assert.notEqual(key.fingerprint, require(path.join(FRONTEND, 'scripts', 'offline', 'verification-key.js')).verificationFingerprint(), 'never the verification key');
+  return key;
+};
 const write = (name, text) => { const file = path.join(tmp, name); fs.writeFileSync(file, text); return file; };
 const baseEnv = (extra = {}) => {
   const env = { ...process.env, ...extra };
@@ -166,9 +184,8 @@ test('release:win from the command line: fails at once with the placeholder file
   assert.equal(run({}, ['--bogus']).status, 1);
 });
 
-test('the repo keeps its placeholder key and no key file of any kind', () => {
-  const keys = fs.readFileSync(path.join(BACKEND, 'src', 'license', 'keys.js'), 'utf8');
-  assert.match(keys, /const PRODUCTION_PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----\r?\n\$\{PLACEHOLDER_MARKER\}\r?\n-----END PUBLIC KEY-----`;/);
+test('the repo keeps either the placeholder or exactly one valid production public key (never the test or verification key), and no key file of any kind', () => {
+  assertRepoKeyPolicy();
   const readme = fs.readFileSync(path.join(FRONTEND, '..', 'tools', 'license-gen', 'README.md'), 'utf8');
   assert.match(readme, /NOTA_RELEASE_PUBLIC_KEY_FILE/, 'the key README explains the release path');
   assert.ok(!/Commit that change yourself/.test(readme), 'the old "commit the key" step is gone');
@@ -181,6 +198,7 @@ const canStage = distReady && typeof electronPath === 'string' && fs.existsSync(
 
 test('a REAL stage with a temp release key: the bundle carries that key (a license from the vendor tool is accepted, a test-key license is refused), the record and build-guard agree, the repo key is untouched, and the temp key is deleted afterwards', { skip: !canStage && process.env.NOTA_ALLOW_SKIP === '1' ? 'no build:offline output / vendor / electron (NOTA_ALLOW_SKIP=1)' : false, timeout: 900000 }, () => {
   assert.ok(canStage, 'run npm run build:offline and npm run offline:vendor first');
+  const repoBefore = assertRepoKeyPolicy();
   const keys = keygen('stage-keys');
   const stageDir = path.join(tmp, 'stage-out');
   const stage = (keyFile, extra = {}) => spawnSync(process.execPath, [path.join(FRONTEND, 'scripts', 'offline', 'stage.js')], {
@@ -198,10 +216,18 @@ test('a REAL stage with a temp release key: the bundle carries that key (a licen
     const refusedVerification = stage(write('stage-verification.pem', require(path.join(FRONTEND, 'scripts', 'offline', 'verification-key.js')).verificationPublicPem()));
     assert.equal(refusedVerification.status, 1);
     assert.match(`${refusedVerification.stdout}${refusedVerification.stderr}`, /VERIFICATION key/);
-    // no key and no placeholder permission: refused
+    // no key file and no placeholder permission: with the placeholder in keys.js it is refused; with a real key in keys.js the stage carries exactly that key
     const none = stage(null);
-    assert.equal(none.status, 1);
-    assert.match(`${none.stdout}${none.stderr}`, /placeholder/);
+    if (repoBefore.placeholder) {
+      assert.equal(none.status, 1);
+      assert.match(`${none.stdout}${none.stderr}`, /placeholder/);
+    } else {
+      assert.equal(none.status, 0, `${none.stdout}\n${none.stderr}`);
+      const noneRecord = JSON.parse(fs.readFileSync(path.join(stageDir, 'release-key.json'), 'utf8'));
+      assert.equal(noneRecord.fingerprint, repoBefore.fingerprint, 'the stage carries the key of keys.js');
+      assert.equal(noneRecord.source, 'nota-backend/src/license/keys.js');
+      assert.equal(noneRecord.placeholder, false);
+    }
 
     const staged = stage(path.join(keys, 'public.pem'));
     assert.equal(staged.status, 0, `${staged.stdout}\n${staged.stderr}`);
@@ -252,7 +278,8 @@ test('a REAL stage with a temp release key: the bundle carries that key (a licen
     fs.rmSync(keys, { recursive: true, force: true });
   }
   assert.equal(fs.existsSync(keys), false, 'the temp key pair is deleted');
-  assert.match(fs.readFileSync(path.join(BACKEND, 'src', 'license', 'keys.js'), 'utf8'), /NOTA_PLACEHOLDER_REPLACE_WITH_PRODUCTION_PUBLIC_KEY/, 'keys.js in the repo still has the placeholder');
+  assert.equal(repoKey().text, repoBefore.text, 'keys.js in the repo is untouched by the stage');
+  assertRepoKeyPolicy();
 });
 
 // ------------------------------------------------------------------ the smoke test target

@@ -380,12 +380,16 @@ const keygen = (name) => {
 
 test('guards: the plain source (test flag on, test key present, placeholder production key) must not ship; prepared source with a real key is clean; a private key is found', () => {
   const src = copy(path.join(BACKEND, 'src'), 'guard-src');
+  // Policy: the repo keeps either the placeholder or one real production public key. The placeholder adds one problem, a real key none.
+  const keysText = fs.readFileSync(path.join(src, 'license', 'keys.js'), 'utf8');
+  const hasPlaceholder = /PRODUCTION_PUBLIC_KEY_PEM = `-----BEGIN PUBLIC KEY-----\r?\n\$\{PLACEHOLDER_MARKER\}\r?\n/.test(keysText);
   const before = protect.sourceProblems(src);
-  assert.equal(before.length, 3, before.join(' | '));
-  assert.ok(before.some((p) => /test-key\.js/.test(p)) && before.some((p) => /TEST_BUILD true/.test(p)) && before.some((p) => /placeholder/.test(p)));
+  assert.equal(before.length, hasPlaceholder ? 3 : 2, before.join(' | '));
+  assert.ok(before.some((p) => /test-key\.js/.test(p)) && before.some((p) => /TEST_BUILD true/.test(p)));
+  assert.equal(before.some((p) => /placeholder/.test(p)), hasPlaceholder);
 
   protect.prepareProductionSource(src);
-  assert.deepEqual(protect.sourceProblems(src).length, 1, 'only the placeholder is left');
+  assert.deepEqual(protect.sourceProblems(src).length, hasPlaceholder ? 1 : 0, hasPlaceholder ? 'only the placeholder is left' : 'nothing is left: the repo key is a real one');
   assert.ok(!fs.existsSync(path.join(src, 'license', 'test-key.js')));
   assert.match(fs.readFileSync(path.join(src, 'license', 'build-flags.js'), 'utf8'), /TEST_BUILD: false/);
 

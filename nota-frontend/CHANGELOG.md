@@ -10,12 +10,16 @@ Every version has a section. The Arabic and English lists are what the "what's n
 - صفحة «بيانات المنشأة» فيها خانة «الاسم التجاري». نفس الخانات ونفس البيانات من غير أي تغيير في المحفوظ.
 - توقيع الفواتير والكشوف بقى «عن المنشأة».
 - اتفاقية الترخيص اتحدّثت بنفس المسميات، وهتظهر لك مرة واحدة عند أول تشغيل بعد التحديث لتوافق عليها.
+- رخصة تجريبية بمدة: ممكن تاخد نسخة تجريبية (30 يوم أو يوم أو ساعة)، وبعدها تتبدّل برخصة مدى الحياة من «استبدال الترخيص» من غير ما تضيع أي بيانات. بطاقة الترخيص بتعرض النوع «تجريبي» وتاريخ ووقت الانتهاء والمتبقي، وشريط فوق كل الشاشات بيقول «نسخة تجريبية — فاضل N يوم» (أحمر في آخر 3 أيام).
+- بعد انتهاء النسخة التجريبية البرنامج بيتحوّل «للعرض بس»: العرض والتقارير والتصدير وطباعة المستندات القديمة والنسخ الاحتياطي شغالين، لكن أي حفظ أو تعديل بيترفض برسالة واضحة. لو ساعة الجهاز اتأخرت أكتر من ساعة النسخة التجريبية بتتوقف لحد ما الساعة تتظبط. الأجهزة الفرعية بتمشي مع الجهاز الرئيسي. رخصة مدى الحياة ما بتتأثرش.
 
 ### en
 - Wording change: Nota now speaks to any kind of business, whether a shop, a company, a distributor or an office. Screens, printouts and messages say "business", "business name" and "owner".
 - The "Business details" page has a "Business name" field. The same fields and the same saved data, nothing stored changes.
 - The signature line on invoices and statements now reads "For the business".
 - The license agreement uses the same wording and is shown once on the first start after the update for you to accept.
+- Trial licenses with an expiry: a business can get a trial (30 days, 1 day or 1 hour) and later swap it for a lifetime license with "Replace license", without losing any data. The license card shows the type "Trial", the expiry date and time and the time left, and a banner above every screen says "Trial version — N days left" (red in the last 3 days).
+- When the trial ends the program becomes view-only: viewing, reports, export, printing existing documents and backup keep working, but every save or change is refused with a clear message. If the PC's clock is set back by more than an hour the trial stops until the clock is fixed. Client PCs follow the main PC. Lifetime licenses are not affected.
 
 ## 1.1.0 - 2026-11-15
 

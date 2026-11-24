@@ -8,8 +8,8 @@
 
 const PREFIX = "NOTA1";
 const KNOWN_VERSIONS = new Set([1]);
-const KNOWN_TYPES = new Set(["lifetime"]); // other types (subscription, trial) may come later
-const PAYLOAD_KEYS = ["v", "licenseId", "type", "shopName", "shopNameEn", "machineId", "maxClients", "issuedAt"];
+const KNOWN_TYPES = new Set(["lifetime", "trial"]); // a trial is a lifetime payload plus `expiresAt` (required for trial, forbidden for lifetime)
+const PAYLOAD_KEYS = ["v", "licenseId", "type", "shopName", "shopNameEn", "machineId", "maxClients", "issuedAt", "expiresAt"];
 
 const MACHINE_ID_PATTERN = /^[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}$/;
 
@@ -55,6 +55,12 @@ const payloadProblem = (p) => {
   if (typeof p.machineId !== "string" || !MACHINE_ID_PATTERN.test(p.machineId)) return "MALFORMED";
   if (!Number.isInteger(p.maxClients) || p.maxClients < 0 || p.maxClients > 1000) return "MALFORMED";
   if (typeof p.issuedAt !== "string" || Number.isNaN(Date.parse(p.issuedAt))) return "MALFORMED";
+  if (p.type === "trial") {
+    if (typeof p.expiresAt !== "string" || Number.isNaN(Date.parse(p.expiresAt))) return "MALFORMED";
+    if (Date.parse(p.expiresAt) <= Date.parse(p.issuedAt)) return "MALFORMED";
+  } else if (p.expiresAt !== undefined) {
+    return "MALFORMED"; // a lifetime license never carries an expiry
+  }
   return null;
 };
 

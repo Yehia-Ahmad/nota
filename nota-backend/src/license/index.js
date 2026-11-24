@@ -14,6 +14,12 @@ const { getMachineId } = require("./machineId");
 
 const FILE_NAME = "nota.lic";
 
+// The one clock the license code reads (ms). Captured at load; tests replace it with setClockForTests to move time.
+const realNow = Date.now.bind(Date);
+let clockOverride = null;
+const now = () => (clockOverride ? clockOverride() : realNow());
+const setClockForTests = (fn) => { clockOverride = typeof fn === "function" ? fn : null; };
+
 // Reasons a license is not accepted.
 const CODES = Object.freeze({
   NONE: "NO_LICENSE",
@@ -23,6 +29,9 @@ const CODES = Object.freeze({
   UNKNOWN_TYPE: "UNKNOWN_TYPE",
   WRONG_MACHINE: "WRONG_MACHINE",
   NO_MACHINE_ID: "NO_MACHINE_ID",
+  // install() only. An installed trial that later expires stays installed and valid: the app turns read-only (trial.js).
+  EXPIRED: "EXPIRED",
+  TRIAL_CANNOT_REPLACE_LIFETIME: "TRIAL_CANNOT_REPLACE_LIFETIME",
 });
 
 const licenseDir = () => process.env.NOTA_LICENSE_DIR || path.join(process.cwd(), ".nota-license");
@@ -78,6 +87,7 @@ const summary = () => {
     machineId: getMachineId(),
     shopName: p ? p.shopName : null,
     ...(p ? { shopNameEn: p.shopNameEn || null } : {}),
+    ...(p && p.type === "trial" ? { type: "trial", expiresAt: p.expiresAt } : {}),
   };
 };
 
@@ -85,7 +95,7 @@ const summary = () => {
 const details = () => {
   const s = current();
   const p = s.ok ? s.payload : null;
-  return p ? { licenseId: p.licenseId, type: p.type, shopName: p.shopName, shopNameEn: p.shopNameEn || null, machineId: p.machineId, maxClients: p.maxClients, issuedAt: p.issuedAt } : null;
+  return p ? { licenseId: p.licenseId, type: p.type, shopName: p.shopName, shopNameEn: p.shopNameEn || null, machineId: p.machineId, maxClients: p.maxClients, issuedAt: p.issuedAt, ...(p.type === "trial" ? { expiresAt: p.expiresAt } : {}) } : null;
 };
 
 /**
@@ -96,6 +106,12 @@ const install = (text) => {
   const trimmed = typeof text === "string" ? text.trim() : "";
   const result = verifyText(trimmed);
   if (!result.ok) return { ok: false, code: result.code };
+  if (result.payload.type === "trial") {
+    // A trial never replaces a lifetime license, and an already expired trial is not worth installing.
+    const installed = current();
+    if (installed.ok && installed.payload.type === "lifetime") return { ok: false, code: CODES.TRIAL_CANNOT_REPLACE_LIFETIME };
+    if (Date.parse(result.payload.expiresAt) <= now()) return { ok: false, code: CODES.EXPIRED };
+  }
   const dir = licenseDir();
   mkdirSync(dir, { recursive: true });
   const temp = path.join(dir, `${FILE_NAME}.${process.pid}.tmp`);
@@ -108,4 +124,4 @@ const install = (text) => {
 /** Tests only: forget the cached state so the next call re-reads the file. */
 const resetForTests = () => { state = { loaded: false, ok: false, code: CODES.NONE, payload: null, text: null }; };
 
-module.exports = { CODES, FILE_NAME, licenseDir, licensePath, verifyText, reload, isValid, payload, summary, details, install, resetForTests };
+module.exports = { CODES, FILE_NAME, licenseDir, licensePath, verifyText, reload, isValid, payload, summary, details, install, resetForTests, now, setClockForTests };

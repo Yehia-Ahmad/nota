@@ -17,6 +17,7 @@ import { AuthService } from './core/auth/auth.service';
 import { UnsavedWorkDialogComponent } from './core/unsaved-work/unsaved-work-dialog.component';
 import { UnsavedWorkService } from './core/unsaved-work/unsaved-work.service';
 import { OtherMainBannerComponent } from './offline/other-main-banner.component';
+import { TrialBannerComponent } from './core/license/trial-banner.component';
 
 @Component({
   selector: 'app-root',
@@ -30,6 +31,7 @@ import { OtherMainBannerComponent } from './offline/other-main-banner.component'
     LockOverlayComponent,
     UnsavedWorkDialogComponent,
     OtherMainBannerComponent,
+    TrialBannerComponent,
   ],
   templateUrl: './app.html',
   styleUrl: './app.scss'

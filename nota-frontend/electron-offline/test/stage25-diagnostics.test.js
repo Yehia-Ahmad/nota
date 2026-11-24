@@ -282,3 +282,16 @@ test('main.js registers the export and the preload exposes it; the manager route
   const preload = fs.readFileSync(path.join(__dirname, '..', 'preload.js'), 'utf8');
   assert.match(preload, /diagnostics:export/);
 });
+
+test('trial licenses: license.json carries the type and the expiry (and still no license text or Machine ID); a lifetime license has no expiry field', () => {
+  const home = plantHome();
+  try {
+    const trialInput = { ...input(home), license: { licenseId: 'NOTA-TRIAL1', type: 'trial', maxClients: 1, issuedAt: '2026-05-01T10:00:00.000Z', expiresAt: '2026-05-31T10:00:00.000Z', machineId: 'AAAA-BBBB', shopName: 'محل خاص', licenseText: PLANTED.license } };
+    const files = readZip(buildDiagnosticsZip(trialInput));
+    const text = files.map((file) => file.data.toString('utf8')).join('\n');
+    const byName = Object.fromEntries(files.map((file) => [file.name, file.data.toString('utf8')]));
+    assert.deepEqual(JSON.parse(byName['license.json']), { licenseId: 'NOTA-TRIAL1', type: 'trial', maxClients: 1, issuedAt: '2026-05-01T10:00:00.000Z', expiresAt: '2026-05-31T10:00:00.000Z', shopName: 'محل خاص' });
+    assert.ok(!text.includes(PLANTED.license) && !text.includes('AAAA-BBBB'));
+    assert.ok(!('expiresAt' in JSON.parse(readZip(buildDiagnosticsZip(input(home))).find((file) => file.name === 'license.json').data.toString('utf8'))));
+  } finally { fs.rmSync(home, { recursive: true, force: true }); }
+});

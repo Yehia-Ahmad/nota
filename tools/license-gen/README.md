@@ -46,7 +46,33 @@ node tools/license-gen/license-gen.js issue --key D:\nota-keys\private.pem ^
    - It prints the license text (one line starting with `NOTA1.`), writes `nota.lic` if you passed `--out`, and appends a line to `issued-licenses.csv` **next to the private key** (licenseId, date, business, machine, maxClients).
 3. Send the customer the text or the `nota.lic` file. They paste it into the activation screen or load the file.
 
-Every license is **lifetime**: no expiry, no trial, no subscription. The first business gets one exactly like any other, issued at no cost.
+A license is **lifetime** (no expiry) unless you pass `--type trial`. The first business gets a lifetime license exactly like any other, issued at no cost.
+
+### Trial license (expires)
+
+A trial is the same license (same Machine ID, business name and `--max-clients`) with an `expiresAt`. Add `--type trial` and **exactly one** of:
+
+- `--days <1-90>`: expires after n × 24 hours from the moment you issue it.
+- `--hours <1-72>`: expires after n hours (for your own testing).
+- `--expires <ISO datetime>`: an exact end, with a time zone, in the future (for example `2026-12-31T23:59:00+02:00`).
+
+None or more than one of them is refused, and so is a value outside the range.
+
+```
+:: 30 days
+node tools/license-gen/license-gen.js issue --key D:\nota-keys\private.pem --machine 1A2B-3C4D-5E6F-7A8B --shop "الاسم التجاري" --max-clients 3 --type trial --days 30 --out nota-trial.lic
+
+:: 1 day
+node tools/license-gen/license-gen.js issue --key D:\nota-keys\private.pem --machine 1A2B-3C4D-5E6F-7A8B --shop "الاسم التجاري" --max-clients 3 --type trial --days 1 --out nota-trial.lic
+
+:: 1 hour (testing)
+node tools/license-gen/license-gen.js issue --key D:\nota-keys\private.pem --machine 1A2B-3C4D-5E6F-7A8B --shop "الاسم التجاري" --max-clients 3 --type trial --hours 1 --out nota-trial.lic
+```
+
+- After issuing, the tool prints the expiry in ISO form and in **Cairo local time**.
+- `issued-licenses.csv` has two more columns, `type` and `expiresAt` (a log written by the older tool keeps its rows and gets the two columns in its header). It **warns** (and still issues) when the log already has a trial for the same Machine ID.
+- While the trial runs the app works like a lifetime license and shows a countdown banner. After `expiresAt` it is **view-only** (reads, reports, export, printing old documents and backups work; every save is refused). If the PC's clock is moved back by more than an hour the trial stops until the clock is fixed.
+- **Turn it into a lifetime license:** issue a normal license (no `--type`) for the same Machine ID. The owner uses "Replace license" in Business details. It works even when the trial has ended and even if the business name is different; no data is lost. A trial can never replace a lifetime license.
 
 ## Check a license
 

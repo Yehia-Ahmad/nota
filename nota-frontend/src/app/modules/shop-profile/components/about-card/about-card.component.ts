@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { DatePipe } from '@angular/common';
 import { NotaButtonDirective } from '../../../shared/ui';
+import { TrialStateService } from '../../../../core/license/trial-state.service';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { DesktopAbout, getDesktopBridge, getDesktopRuntimeConfig } from '../../../../core/runtime/runtime-config';
 
@@ -12,7 +14,7 @@ import { DesktopAbout, getDesktopBridge, getDesktopRuntimeConfig } from '../../.
   selector: 'app-about-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslatePipe, NotaButtonDirective],
+  imports: [DatePipe, TranslatePipe, NotaButtonDirective],
   template: `
     <section class="about" data-test="about-card" aria-labelledby="about-title">
       <h2 id="about-title" class="nota-section-title">{{ 'about.title' | translate }}</h2>
@@ -20,6 +22,14 @@ import { DesktopAbout, getDesktopBridge, getDesktopRuntimeConfig } from '../../.
         <dl class="about__grid">
           <div><dt>{{ 'about.version' | translate }}</dt><dd dir="ltr" class="nota-num" data-field="about-version">{{ info.version }}</dd></div>
           <div><dt>{{ 'about.build' | translate }}</dt><dd dir="ltr" class="nota-num" data-field="about-build">{{ info.build }}</dd></div>
+          @if (license.status(); as licenseStatus) {
+            @if (licenseStatus.licensed) {
+              <div><dt>{{ 'license.type' | translate }}</dt><dd data-field="about-license-type">{{ (licenseStatus.trial ? 'license.trial' : 'license.lifetime') | translate }}</dd></div>
+              @if (licenseStatus.trial) {
+                <div><dt>{{ 'license.expiresAt' | translate }}</dt><dd class="nota-num" data-field="about-license-expires">{{ licenseStatus.trial.expiresAt | date: 'yyyy-MM-dd HH:mm' }}</dd></div>
+              }
+            }
+          }
           @if (serverVersion && serverVersion !== info.version) {
             <div><dt>{{ 'about.serverVersion' | translate }}</dt><dd dir="ltr" class="nota-num" data-field="about-server-version">{{ serverVersion }}</dd></div>
           }
@@ -56,6 +66,8 @@ import { DesktopAbout, getDesktopBridge, getDesktopRuntimeConfig } from '../../.
 export class AboutCardComponent {
   private readonly translate = inject(TranslateService);
   private readonly auth = inject(AuthService);
+  /** Trial licenses: the license type and expiry (no other license detail is shown here). */
+  protected readonly license = inject(TrialStateService);
   protected readonly about = signal<DesktopAbout | null>(null);
   protected readonly notes = signal<string[]>([]);
   protected readonly notesEmpty = signal(false);

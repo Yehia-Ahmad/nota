@@ -11,6 +11,8 @@ import { CartRescueService } from './cart-rescue.service';
 import { LockStateService } from './lock-state.service';
 import { LockDateService } from '../accounting-lock/lock-date.service';
 import { ToastService } from './toast.service';
+import { TrialStateService } from '../license/trial-state.service';
+import { isBlockedWhenReadOnly } from '../license/trial-banner';
 
 /**
  * Stage 15: what a locked screen still sends: the unlock itself, and two read-only GETs the lock
@@ -29,6 +31,8 @@ const sentWhileLocked = (req: HttpRequest<unknown>) =>
  *   asked about, and reason DATA_RESTORED (a backup was restored) shows the restore message.
  * - 403 FORBIDDEN / DISCOUNT_LIMIT → a toast with the server message; the user stays on the page.
  * - 429 LOGIN_LOCKED → a toast with the minutes left.
+ * - Trial licenses: 402 LICENSE_EXPIRED / CLOCK_ROLLBACK → a toast with the server message and a refresh of the banner; after expiry the
+ *   window refuses writes itself (same message) before sending them.
  * - Stage 15: while the screen is locked, new backend requests wait until it is unlocked
  *   (requests already running finish normally; the token never changes).
  * Requests marked HANDLES_OWN_ERRORS (login screen, change password, unlock) show their errors themselves.
@@ -49,6 +53,14 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return token && toBackend ? request.clone({ setHeaders: { Authorization: `Bearer ${token}` } }) : request;
   };
 
+  // Trial licenses: after the trial ended the backend refuses every write (402 LICENSE_EXPIRED). The window stops them first, with the same
+  // message, so a screen's own error handling shows a clear refusal and nothing is sent. Reads, sign-in and the other exempt routes pass.
+  if (toBackend && isBlockedWhenReadOnly(req.method, req.url) && injector.get(TrialStateService).readOnly()) {
+    const text = translate().instant('trial.readOnlyAction');
+    toast().error(text);
+    return throwError(() => new HttpErrorResponse({ status: 402, url: req.url, statusText: 'Payment Required', error: { code: 'LICENSE_EXPIRED', message: text } }));
+  }
+
   // Only a signed-in window is ever locked; without a session nothing waits (sign-in screen, bootstrap).
   const waitsForUnlock = toBackend && Boolean(auth.token()) && lockState.locked() && !sentWhileLocked(req);
   const send = waitsForUnlock
@@ -65,6 +77,11 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
           const message = errorMessage(error);
           if (message) toast().error(message);
           else translate().get(`auth.errors.${code}`).subscribe((text: string) => toast().error(text));
+        } else if (error.status === 402 && (code === 'LICENSE_EXPIRED' || code === 'CLOCK_ROLLBACK')) {
+          // Trial licenses: the backend says the trial ended (or the clock is behind). Say so, and update the banner now.
+          const message = errorMessage(error);
+          if (message) toast().error(message);
+          injector.get(TrialStateService).refresh();
         } else if (error.status === 409 && code === 'PERIOD_LOCKED') {
           // Stage 22: another PC closed a period since this one signed in. The error names the lock date; the form shows the server message.
           injector.get(LockDateService).set((error.error as { lockedThrough?: string } | null)?.lockedThrough);

@@ -8,7 +8,7 @@
 //   README.txt       what is inside and what is not
 //   info.json        app version + build, Electron/Node/Chrome versions, Windows version, CPU/RAM, uptime
 //   config.json      role, port, instanceId, startWithWindows, main PC address (allowlisted keys only; no secrets)
-//   license.json     license id, type, max client PCs, issue date and the shop name (no license text, no Machine ID)
+//   license.json     license id, type, expiry (a trial only), max client PCs, issue date and the shop name (no license text, no Machine ID)
 //   status.json      what the status page shows (state, label, error code and message)
 //   database.json    the data version, the app version/build that last ran on it, the paired and known client PCs
 //   migrations.json  the migration log (version, name, when)
@@ -129,7 +129,7 @@ function buildDiagnosticsEntries({ now = new Date(), edition, runtime = {}, conf
     disk: diskFree || null,
   });
   add('config.json', pick(config, CONFIG_KEYS));
-  add('license.json', pick(license, ['licenseId', 'type', 'maxClients', 'issuedAt', 'shopName']));
+  add('license.json', pick(license, ['licenseId', 'type', 'maxClients', 'issuedAt', 'expiresAt', 'shopName']));
   add('status.json', pick(status, ['state', 'label', 'code', 'message']));
   add('database.json', pick(database, ['schemaVersion', 'appVersion', 'appBuild', 'pairedClients', 'knownClients', 'error', 'unavailable']));
   add('backups.json', {

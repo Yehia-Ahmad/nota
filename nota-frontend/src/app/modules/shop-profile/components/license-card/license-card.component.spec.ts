@@ -4,6 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { environment } from '../../../../../environments/environment';
 import { LicenseCardComponent } from './license-card.component';
+import { TrialStateService } from '../../../../core/license/trial-state.service';
 
 /** Stage 24: the "الترخيص" card (owner). */
 describe('LicenseCardComponent (Stage 24)', () => {
@@ -137,5 +138,38 @@ describe('LicenseCardComponent (Stage 24)', () => {
     await settle();
     expect(el().querySelector('[data-test="license-load-failed"]')).not.toBeNull();
     expect(el().querySelector('[data-field="license-shop"]')).toBeNull();
+  });
+
+  it('a trial license shows the type, the expiry date and time and the remaining time; replacing it with a lifetime license clears them', async () => {
+    const soon = Date.now() + 5 * 3600_000;
+    const expiresAt = new Date(soon).toISOString();
+    TestBed.configureTestingModule({});
+    await open({ ...INFO, type: 'trial', expiresAt });
+    const trial = TestBed.inject(TrialStateService);
+    trial.apply({ licensed: true, type: 'trial', expiresAt, trial: { state: 'active', issuedAt: new Date(soon - 2 * 86400_000).toISOString(), expiresAt, remainingMs: 5 * 3600_000, now: new Date().toISOString() } });
+    await settle();
+    expect(field('license-type')).toContain('license.trial');
+    expect(field('license-expires')).toMatch(/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/);
+    expect(field('license-remaining')).toContain('5');
+    expect(field('license-remaining')).toContain('trial.unit.hours');
+
+    (el().querySelector('[data-action="replace-license"]') as HTMLButtonElement).click();
+    await settle();
+    component.text.set('NOTA1.new.lic');
+    await settle();
+    (el().querySelector('[data-action="activate-license"]') as HTMLButtonElement).click();
+    http.expectOne(`${base}/activate`).flush({ licensed: true });
+    http.expectOne(`${base}/info`).flush({ ...INFO, type: 'lifetime' });
+    http.expectOne((r) => r.url === `${environment.api_base_url}shop-profile` && r.method === 'GET').flush({ name: 'محل النور' });
+    await settle();
+    expect(trial.banner()).toBeNull();
+    expect(field('license-expires')).toBeUndefined();
+    expect(field('license-type')).toContain('license.lifetime');
+  });
+
+  it('a lifetime license shows no expiry and no remaining time', async () => {
+    await open();
+    expect(field('license-expires')).toBeUndefined();
+    expect(field('license-remaining')).toBeUndefined();
   });
 });

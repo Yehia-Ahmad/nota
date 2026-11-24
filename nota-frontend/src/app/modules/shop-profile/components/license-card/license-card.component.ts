@@ -4,10 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { getDesktopRuntimeConfig } from '../../../../core/runtime/runtime-config';
 import { NotaButtonDirective } from '../../../shared/ui';
+import { TrialStateService } from '../../../../core/license/trial-state.service';
+import { LicenseStatus } from '../../../../core/license/trial-banner';
 import { LicenseInfo, LicenseService } from '../../services/license.service';
 import { ShopProfileService } from '../../services/shop-profile.service';
 
-const REASONS = new Set(['MALFORMED', 'BAD_SIGNATURE', 'WRONG_MACHINE', 'UNKNOWN_TYPE', 'UNKNOWN_VERSION', 'NO_MACHINE_ID']);
+const REASONS = new Set(['MALFORMED', 'BAD_SIGNATURE', 'WRONG_MACHINE', 'UNKNOWN_TYPE', 'UNKNOWN_VERSION', 'NO_MACHINE_ID', 'EXPIRED', 'TRIAL_CANNOT_REPLACE_LIFETIME']);
 
 /**
  * Stage 24: the "الترخيص" card of the shop profile. The owner sees the license (shop name, license ID, type, client PCs used /
@@ -28,7 +30,16 @@ const REASONS = new Set(['MALFORMED', 'BAD_SIGNATURE', 'WRONG_MACHINE', 'UNKNOWN
         <dl class="lic__grid">
           <div><dt>{{ 'license.shopName' | translate }}</dt><dd data-field="license-shop">{{ license.shopName }}</dd></div>
           <div><dt>{{ 'license.licenseId' | translate }}</dt><dd dir="ltr" class="nota-num" data-field="license-id">{{ license.licenseId }}</dd></div>
-          <div><dt>{{ 'license.type' | translate }}</dt><dd data-field="license-type">{{ (license.type === 'lifetime' ? 'license.lifetime' : 'license.otherType') | translate }}</dd></div>
+          <div><dt>{{ 'license.type' | translate }}</dt><dd data-field="license-type">{{ (license.type === 'lifetime' ? 'license.lifetime' : license.type === 'trial' ? 'license.trial' : 'license.otherType') | translate }}</dd></div>
+          @if (license.type === 'trial' && license.expiresAt) {
+            <div><dt>{{ 'license.expiresAt' | translate }}</dt><dd class="nota-num" data-field="license-expires">{{ license.expiresAt | date: 'yyyy-MM-dd HH:mm' }}</dd></div>
+            <div><dt>{{ 'license.remaining' | translate }}</dt>
+              <dd data-field="license-remaining">
+                @if (trialBanner(); as banner) {
+                  @if (banner.kind === 'countdown') { {{ banner.n }} {{ 'trial.unit.' + banner.unit | translate }} } @else { {{ ('trial.banner.' + banner.kind) | translate }} }
+                }
+              </dd></div>
+          }
           <div><dt>{{ 'license.maxClients' | translate }}</dt>
             <dd class="nota-num" data-field="license-clients">{{ 'license.clientsOf' | translate: { used: license.clientsUsed, max: license.maxClients } }}</dd></div>
           <div><dt>{{ 'license.machineId' | translate }}</dt><dd dir="ltr" class="nota-num" data-field="license-machine">{{ license.machineId }}</dd></div>
@@ -113,6 +124,9 @@ export class LicenseCardComponent implements OnInit {
   private readonly license = inject(LicenseService);
   private readonly shopProfile = inject(ShopProfileService);
   private readonly translate = inject(TranslateService);
+  private readonly trial = inject(TrialStateService);
+  /** Live remaining time of a trial (the same rules as the banner). */
+  protected readonly trialBanner = this.trial.banner;
 
   protected readonly info = signal<LicenseInfo | null>(null);
   protected readonly loadFailed = signal(false);
@@ -155,12 +169,14 @@ export class LicenseCardComponent implements OnInit {
     this.busy.set(true);
     this.message.set(null);
     this.license.replace(this.text().trim()).subscribe({
-      next: () => {
+      next: (result) => {
         this.busy.set(false);
         this.replacing.set(false);
         this.text.set('');
         this.message.set({ text: this.translate.instant('license.replaced'), error: false });
         this.load();
+        // The answer is the new status: a lifetime license replacing a trial takes the banner away at once (no extra request).
+        if (result && typeof result === 'object' && 'licensed' in result) this.trial.apply(result as LicenseStatus);
         this.shopProfile.refresh(); // the shop name comes from the license
       },
       error: (error) => {

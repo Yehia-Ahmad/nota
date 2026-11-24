@@ -1117,6 +1117,19 @@
             "noInvoices": "No invoices yet"
         }
     },
+    "trial": {
+      "title": "Trial",
+      "banner": {
+        "days": "Trial version — {{n}} day(s) left",
+        "hours": "Trial version — {{n}} hour(s) left",
+        "minutes": "Trial version — {{n}} minute(s) left",
+        "owner": "Call 01028647164 for the full license",
+        "expired": "The trial has ended — the program is view-only",
+        "rollback": "This PC's clock is behind — fix it and open the program again"
+      },
+      "readOnlyAction": "The trial has ended — the program is view-only. This action is not available.",
+      "unit": { "days": "day(s)", "hours": "hour(s)", "minutes": "minute(s)" }
+    },
     "license": {
         "title": "License",
         "loading": "Loading the license...",
@@ -1125,6 +1138,9 @@
         "licenseId": "License ID",
         "type": "Type",
         "lifetime": "Lifetime",
+        "trial": "Trial",
+        "expiresAt": "Expires at",
+        "remaining": "Time left",
         "otherType": "Other",
         "maxClients": "Client PCs (used of allowed)",
         "clientsOf": "{{used}} of {{max}}",
@@ -1152,6 +1168,8 @@
             "BAD_SIGNATURE": "This license is not valid or was changed. Ask for a new one.",
             "WRONG_MACHINE": "This license was issued for another PC. Send this PC's ID and ask for a license for it.",
             "UNKNOWN_TYPE": "This license type is not supported by this version.",
+            "EXPIRED": "This trial has ended. Activate a full license.",
+            "TRIAL_CANNOT_REPLACE_LIFETIME": "This PC already has a full license; it cannot be replaced by a trial.",
             "UNKNOWN_VERSION": "This license format is newer than this version. Update the app.",
             "NO_MACHINE_ID": "This PC's ID could not be read. Contact support.",
             "UNREADABLE": "The file could not be read.",

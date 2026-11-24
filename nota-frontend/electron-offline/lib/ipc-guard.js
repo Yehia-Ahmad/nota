@@ -15,6 +15,9 @@
 const { LAN_KEY_HEADER } = require('./lan-auth');
 
 const SESSION = 'session'; // any signed-in user
+// A renderer action that needs a session token but no backend round-trip. This is reserved for
+// local-only work whose input was already built by the signed-in Angular app (currently PDF save).
+const LOCAL_SESSION = 'local-session';
 const BACKUP_MANAGE = 'backup.manage';
 const SHOP_MANAGE = 'shop.manage';
 const PRODUCTS_PRINT_LABELS = 'products.printLabels';
@@ -42,7 +45,9 @@ const IPC_RULES = Object.freeze({
   'print:test-page': SHOP_MANAGE,
   'print:print': SESSION,
   'print:labels': PRODUCTS_PRINT_LABELS,
-  'print:pdf': SESSION,
+  // Saving an already-rendered document is local filesystem work. Keeping it off /api/auth/me
+  // lets the save dialog open while the backend is briefly restarting or under maintenance.
+  'print:pdf': LOCAL_SESSION,
 });
 
 const ME_TIMEOUT_MS = 5000;
@@ -144,9 +149,10 @@ async function checkCaller({ channel, token, backend }) {
   const rule = IPC_RULES[channel];
   if (!rule) throw new Error(`no IPC rule for ${channel}`);
   if (!validToken(token)) throw sessionExpired();
+  if (rule === LOCAL_SESSION) return { user: null, permissions: [], local: true };
   const caller = await backend.me(token);
   if (rule !== SESSION && !caller.permissions.includes(rule)) throw forbidden();
   return caller;
 }
 
-module.exports = { BACKUP_MANAGE, GuardError, IPC_RULES, PRODUCTS_PRINT_LABELS, SESSION, checkCaller, createBackendClient };
+module.exports = { BACKUP_MANAGE, GuardError, IPC_RULES, LOCAL_SESSION, PRODUCTS_PRINT_LABELS, SESSION, checkCaller, createBackendClient };

@@ -7,6 +7,7 @@
 const express = require("express");
 const license = require("../license");
 const service = require("../license/service");
+const trial = require("../license/trial");
 const asyncHandler = require("../utils/asyncHandler");
 const { requireAuth, requirePermission, localOnly, publicRoute } = require("../auth/middleware");
 const { clientSlots, unpair, allow } = require("../license/clients");
@@ -41,7 +42,7 @@ const createLicenseRouter = ({ secret, sessionsValidAfter = 0 } = {}) => {
   const router = express.Router();
   const session = () => (secret ? [requireAuth(secret, { sessionsValidAfter })] : []);
 
-  router.get("/status", publicRoute(), (_req, res) => res.json(license.summary()));
+  router.get("/status", publicRoute(), (_req, res) => res.json({ ...license.summary(), ...trial.view() }));
 
   // Tagged PUBLIC for the route-coverage test: with no license it needs no login. With one installed, the owner check below applies.
   router.post("/activate", publicRoute(), (req, res, next) => {
@@ -51,14 +52,14 @@ const createLicenseRouter = ({ secret, sessionsValidAfter = 0 } = {}) => {
     const text = req.body && typeof req.body.license === "string" ? req.body.license : "";
     const result = await service.activate(text, req.user);
     if (!result.ok) throw httpError(400, "LICENSE_INVALID", "الترخيص ده مش صالح لهذا الجهاز", { reason: result.code });
-    res.json({ ...license.summary(), license: license.details() });
+    res.json({ ...license.summary(), ...trial.view(), license: license.details() });
   }));
 
   router.get("/info", ...session(), requirePermission("shop.manage"), ownerOnly,
     asyncHandler(async (_req, res) => {
       const details = license.details();
       if (!details) throw httpError(402, "LICENSE_REQUIRED", "النسخة دي مش مفعّلة");
-      res.json({ ...details, ...(await clientSlots(details.maxClients)) });
+      res.json({ ...details, ...trial.view(), ...(await clientSlots(details.maxClients)) });
     }));
 
   // The owner lets a revoked (unpaired) PC pair again. It still needs a free slot and pairs itself the next time it signs in.

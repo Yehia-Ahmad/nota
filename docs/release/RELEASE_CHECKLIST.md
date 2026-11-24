@@ -1,7 +1,7 @@
 # Nota release checklist
 
 For the person who builds and ships a version (the "release manager"). One command builds the installer; this list is what to do around it.
-Shop-facing steps are in Arabic: `NEW_SHOP_SETUP_AR.md` (every new shop, the first one included), `UPGRADE_AR.md` (a newer version for a shop already on Nota, with the rollback), `SMARTSCREEN_AR.md`, `PRINTER_CHECK_AR.md`.
+Customer-facing steps are in Arabic: `NEW_SHOP_SETUP_AR.md` (every new business, the first one included), `UPGRADE_AR.md` (a newer version for a business already on Nota, with the rollback), `SMARTSCREEN_AR.md`, `PRINTER_CHECK_AR.md`.
 
 ## Before the build
 
@@ -56,22 +56,22 @@ Use a PC (or a Windows VM) that never had Nota, or **Windows Sandbox**: a throwa
 
 - [ ] SHA-256 on that PC matches the `.sha256` file: `certutil -hashfile Nota-Setup-<version>.exe SHA256`.
 - [ ] If the version has a migration: install it **over the previous version with some data** (a throwaway PC, a VM or the Sandbox), confirm the `before-upgrade-*` file appears in `C:\ProgramData\Nota\backups`, and run **both** rollbacks of `UPGRADE_AR.md` once (this needs the previous installer: see the next section).
-- [ ] Printer: `PRINTER_CHECK_AR.md` on the shop's real receipt printer the first time, or when the printer model changes.
+- [ ] Printer: `PRINTER_CHECK_AR.md` on the business's real receipt printer the first time, or when the printer model changes.
 
 ## Keep every released installer
 
-- [ ] **Keep every released installer and its SHA-256** (the whole `release-offline\<version>\` folder, with its `sourcemaps\`) in a safe place, for as long as any shop may be on that version. Rollback B of `UPGRADE_AR.md` installs the **previous** installer, so without it a shop cannot go back. Never delete or rebuild an old version: a new fix is a new version number.
+- [ ] **Keep every released installer and its SHA-256** (the whole `release-offline\<version>\` folder, with its `sourcemaps\`) in a safe place, for as long as any business may be on that version. Rollback B of `UPGRADE_AR.md` installs the **previous** installer, so without it a business cannot go back. Never delete or rebuild an old version: a new fix is a new version number.
 
 ## Ship
 
-- [ ] Send the installer (USB stick or a private link) together with its SHA-256. Tell the shop to read `SMARTSCREEN_AR.md` if Windows warns.
-- [ ] Every PC of a shop gets the **same** version: the client PCs show a warning when their version differs from the main PC's.
-- [ ] Issue the shop's license as usual (`tools/license-gen/README.md`, step 3).
-- [ ] Record: version, build number, SHA-256, date, which shops got it.
+- [ ] Send the installer (USB stick or a private link) together with its SHA-256. Tell the customer to read `SMARTSCREEN_AR.md` if Windows warns.
+- [ ] Every PC of a business gets the **same** version: the client PCs show a warning when their version differs from the main PC's.
+- [ ] Issue the business's license as usual (`tools/license-gen/README.md`, step 3).
+- [ ] Record: version, build number, SHA-256, date, which businesses got it.
 
-## When a shop has a problem
+## When a business has a problem
 
-Ask the owner or a manager to open **Settings → About → Export diagnostics file**, save the zip and send it to you. It holds versions, status, settings (no secrets), backup file names and the tail of the logs with passwords, tokens, license text, e-mails and phone numbers removed, and no shop data. To read a stack trace in it:
+Ask the owner or a manager to open **Settings → About → Export diagnostics file**, save the zip and send it to you. It holds versions, status, settings (no secrets), backup file names and the tail of the logs with passwords, tokens, license text, e-mails and phone numbers removed, and no business data. To read a stack trace in it:
 
 ```
 node scripts/offline/decode-stack.js stack.txt release-offline\<version>\sourcemaps

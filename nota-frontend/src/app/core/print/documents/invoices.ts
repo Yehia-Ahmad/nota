@@ -159,7 +159,7 @@ export function creditInvoice(ctx: PrintContext, data: CreditInvoiceData): Print
   <div class="col keep" style="gap:16px" data-debt-block>
     <div class="box" style="font-size:13px;line-height:1.8" data-acknowledgment>${acknowledgment}</div>
     ${closing(ctx, [
-      { who: pick(ctx, 'عن المحل', 'For the shop'), line: pick(ctx, 'الاسم والتوقيع', 'Name and signature') },
+      { who: pick(ctx, 'عن المنشأة', 'For the business'), line: pick(ctx, 'الاسم والتوقيع', 'Name and signature') },
       { who: pick(ctx, 'العميل', 'Customer'), line: pick(ctx, 'الاسم والتوقيع والرقم القومي', 'Name, signature and national ID') },
     ], true)}
   </div>`,
@@ -316,7 +316,7 @@ export function voucher(ctx: PrintContext, data: VoucherData): PrintDocument {
   const logo = shop && shop.logo ? `<img src="${escapeHtml(shop.logo)}" alt="" width="44" height="44" style="width:44px;height:44px;object-fit:contain;border-radius:8px">` : '';
   const hasBalance = data.balanceBefore !== null && data.balanceBefore !== undefined && data.balanceAfter !== null && data.balanceAfter !== undefined;
   const signatureItems = receiving
-    ? [{ who: `${pick(ctx, 'المستلم (عن المحل)', 'Received (for the shop)')}`, line: data.preparedBy || pick(ctx, 'الاسم والتوقيع', 'Name and signature') }, { who: pick(ctx, 'الدافع', 'Payer'), line: pick(ctx, 'الاسم والتوقيع', 'Name and signature') }]
+    ? [{ who: `${pick(ctx, 'المستلم (عن المنشأة)', 'Received (for the business)')}`, line: data.preparedBy || pick(ctx, 'الاسم والتوقيع', 'Name and signature') }, { who: pick(ctx, 'الدافع', 'Payer'), line: pick(ctx, 'الاسم والتوقيع', 'Name and signature') }]
     : [
         { who: pick(ctx, 'أمين الخزنة', 'Cashier'), line: pick(ctx, 'التوقيع', 'Signature') },
         { who: pick(ctx, 'المدير', 'Manager'), line: pick(ctx, 'اعتماد', 'Approval') },

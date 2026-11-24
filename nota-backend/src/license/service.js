@@ -3,6 +3,7 @@ const Meta = require("../models/meta.model");
 const ShopProfile = require("../models/shopProfile.model");
 const AuditLog = require("../models/auditLog.model");
 const license = require("./index");
+const trial = require("./trial");
 
 /** Keeps a copy of the license text in the database (client PCs read the info through the backend). */
 const storeCopy = async (text) => {
@@ -35,6 +36,7 @@ const activate = async (text, user) => {
   if (!result.ok) return result;
   await storeCopy(String(text).trim());
   await syncShopName(result.payload, user);
+  if (result.payload.type === "trial") await trial.init(); // start tracking the highest clock time seen
   return result;
 };
 
@@ -44,6 +46,7 @@ const applyAtStart = async () => {
   if (!state.ok) return state;
   await storeCopy(state.text);
   await syncShopName(state.payload, null);
+  if (state.payload.type === "trial") await trial.init();
   return state;
 };
 

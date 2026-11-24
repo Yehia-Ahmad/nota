@@ -133,7 +133,18 @@ it("a license with a payload that passes the signature but is malformed is refus
   }
 });
 
-it("the production key set does not accept a test-key license (a staged copy of the license code with the test flag off)", () => {
+it("the production key set (the placeholder or exactly one valid production key, never the test or verification key) does not accept a test-key license (a staged copy of the license code with the test flag off)", () => {
+  // Policy: keys.js holds either the placeholder or exactly one valid Ed25519 public key; it is NEVER the test key or the verification key.
+  const keysText = fs.readFileSync(path.join(__dirname, "..", "src", "license", "keys.js"), "utf8");
+  const literal = new RegExp("PRODUCTION_PUBLIC_KEY_PEM = " + "`" + "([^" + "`" + "]*)" + "`" + ";").exec(keysText)[1];
+  const isPlaceholder = literal.replace(/\s+/g, "") === "-----BEGINPUBLICKEY-----${PLACEHOLDER_MARKER}-----ENDPUBLICKEY-----";
+  const der = (pem) => crypto.createPublicKey(pem).export({ type: "spki", format: "der" }).toString("hex");
+  if (!isPlaceholder) {
+    assert.equal((literal.match(/-----BEGIN /g) || []).length, 1, "exactly one public key block");
+    assert.equal(crypto.createPublicKey(literal).asymmetricKeyType, "ed25519");
+    assert.notEqual(der(literal), der(require("../src/license/test-key").TEST_PUBLIC_KEY_PEM), "never the test key");
+    assert.notEqual(der(literal), der(require("../../nota-frontend/scripts/offline/verification-key").verificationPublicPem()), "never the verification key");
+  }
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "nota-prodkeys-"));
   try {
     for (const file of ["index.js", "keys.js", "format.js", "machineId.js"]) fs.copyFileSync(path.join(__dirname, "..", "src", "license", file), path.join(dir, file));
@@ -142,7 +153,7 @@ it("the production key set does not accept a test-key license (a staged copy of 
     fs.writeFileSync(path.join(licenseDir, "nota.lic"), issueTestLicense({}));
     const script = `process.env.NOTA_LICENSE_DIR=${JSON.stringify(licenseDir)}; const l=require(${JSON.stringify(path.join(dir, "index.js"))}); const k=require(${JSON.stringify(path.join(dir, "keys.js"))}); console.log(JSON.stringify({valid:l.isValid(), code:l.summary().code, keys:k.acceptedPublicKeys().length, test:k.isTestBuild()}));`;
     const out = JSON.parse(require("node:child_process").execFileSync(process.execPath, ["-e", script], { encoding: "utf8" }).trim());
-    assert.deepEqual(out, { valid: false, code: "BAD_SIGNATURE", keys: 0, test: false }, "the placeholder production key verifies nothing and the test key is absent");
+    assert.deepEqual(out, { valid: false, code: "BAD_SIGNATURE", keys: isPlaceholder ? 0 : 1, test: false }, "a build made with this key refuses a test-key license; the test key is absent (the placeholder verifies nothing)");
     fs.rmSync(licenseDir, { recursive: true, force: true });
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });

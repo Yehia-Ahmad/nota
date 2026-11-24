@@ -59,7 +59,7 @@ const updateShopProfile = asyncHandler(async (req, res) => {
     const sameName = given(body.name) === null || given(body.name) === licensed.shopName;
     const sameNameEn = given(body.nameEn) === null || given(body.nameEn) === (licensed.shopNameEn || "") || (given(body.nameEn) === "" && !licensed.shopNameEn);
     if (!sameName || !sameNameEn) {
-      const error = new Error("اسم المحل مرتبط بالترخيص ومينفعش يتغيّر");
+      const error = new Error("الاسم التجاري مرتبط بالترخيص ومينفعش يتغيّر");
       error.statusCode = 400; error.responseData = { code: "SHOP_NAME_LOCKED" };
       throw error;
     }

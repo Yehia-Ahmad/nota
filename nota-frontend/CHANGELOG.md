@@ -3,13 +3,31 @@
 Every version has a section. The Arabic and English lists are what the "what's new" window shows once after an upgrade
 (electron-offline/lib/whats-new.js). The build refuses to release a version that has no section here.
 
-## 1.1.1 - 2026-11-20
+## 1.1.2 - 2026-11-24
 
 ### ar
-- إصلاح: بين 12 بعد منتصف الليل و2 صباحًا (بتوقيت القاهرة) كان تاريخ المرتجع وتاريخ البيع في فلتر الفواتير واسم ملف التصدير ومنحنى الأرباح السنوي يطلعوا بتاريخ امبارح؛ دلوقتي كلهم بيوم المحل الفعلي، وفلتر المشتريات والمرتجعات بالتاريخ بيلقى مستندات أول اليوم.
+- إصلاح: بين 12 بعد منتصف الليل و2 صباحًا (بتوقيت القاهرة) كان تاريخ المرتجع وتاريخ البيع في فلتر الفواتير واسم ملف التصدير ومنحنى الأرباح السنوي يطلعوا بتاريخ امبارح؛ دلوقتي كلهم باليوم الفعلي، وفلتر المشتريات والمرتجعات بالتاريخ بيلاقي مستندات أول اليوم.
 
 ### en
-- Fix: between 00:00 and 02:00 Cairo time the return date, the invoice selling-date filter, export file names and the yearly profit chart used yesterday's date; they now use the shop's own day, and the purchases and returns date filters find documents stamped just after midnight.
+- Fix: between 00:00 and 02:00 Cairo time the return date, the invoice selling-date filter, export file names and the yearly profit chart used yesterday's date; they now use the actual local day, and the purchases and returns date filters find documents stamped just after midnight.
+
+## 1.1.1 - 2026-11-24
+
+### ar
+- تغيير المسميات: «نوتة» بقت بتخاطب أي نشاط، سواء كان بيع تجزئة أو شركة أو موزّعاً أو مكتباً. الشاشات والطباعة والرسائل بقت بتقول «المنشأة» و«الاسم التجاري» و«المالك».
+- صفحة «بيانات المنشأة» فيها خانة «الاسم التجاري». نفس الخانات ونفس البيانات من غير أي تغيير في المحفوظ.
+- توقيع الفواتير والكشوف بقى «عن المنشأة».
+- اتفاقية الترخيص اتحدّثت بنفس المسميات، وهتظهر لك مرة واحدة عند أول تشغيل بعد التحديث لتوافق عليها.
+- رخصة تجريبية بمدة: ممكن تاخد نسخة تجريبية (30 يوم أو يوم أو ساعة)، وبعدها تتبدّل برخصة مدى الحياة من «استبدال الترخيص» من غير ما تضيع أي بيانات. بطاقة الترخيص بتعرض النوع «تجريبي» وتاريخ ووقت الانتهاء والمتبقي، وشريط فوق كل الشاشات بيقول «نسخة تجريبية — فاضل N يوم» (أحمر في آخر 3 أيام).
+- بعد انتهاء النسخة التجريبية البرنامج بيتحوّل «للعرض بس»: العرض والتقارير والتصدير وطباعة المستندات القديمة والنسخ الاحتياطي شغالين، لكن أي حفظ أو تعديل بيترفض برسالة واضحة. لو ساعة الجهاز اتأخرت أكتر من ساعة النسخة التجريبية بتتوقف لحد ما الساعة تتظبط. الأجهزة الفرعية بتمشي مع الجهاز الرئيسي. رخصة مدى الحياة ما بتتأثرش.
+
+### en
+- Wording change: Nota now speaks to any kind of business, whether a shop, a company, a distributor or an office. Screens, printouts and messages say "business", "business name" and "owner".
+- The "Business details" page has a "Business name" field. The same fields and the same saved data, nothing stored changes.
+- The signature line on invoices and statements now reads "For the business".
+- The license agreement uses the same wording and is shown once on the first start after the update for you to accept.
+- Trial licenses with an expiry: a business can get a trial (30 days, 1 day or 1 hour) and later swap it for a lifetime license with "Replace license", without losing any data. The license card shows the type "Trial", the expiry date and time and the time left, and a banner above every screen says "Trial version — N days left" (red in the last 3 days).
+- When the trial ends the program becomes view-only: viewing, reports, export, printing existing documents and backup keep working, but every save or change is refused with a clear message. If the PC's clock is set back by more than an hour the trial stops until the clock is fixed. Client PCs follow the main PC. Lifetime licenses are not affected.
 
 ## 1.1.0 - 2026-11-15
 
@@ -19,10 +37,10 @@ Every version has a section. The Arabic and English lists are what the "what's n
 - البيع بالسكانر: امسح المنتج في البيع النقدي والآجل والمشتريات فيُضاف بكمية 1، ولو مسحته تاني تزيد الكمية 1. باركود مش متسجل يطلع له تنبيه وصوت، وتقدر تضيفه كمنتج جديد على طول.
 - المرتجعات: امسح باركود الإيصال (رقم الفاتورة) فتفتح الفاتورة، وامسح باركود أي منتج فيها فيزيد 1 في كمية المرتجع بحد أقصى المتاح.
 - يشتغل السكانر حتى لو الكيبورد على العربي، وبأرقام عربية أو فارسية.
-- طباعة ملصقات الباركود (اسم المحل، اسم المنتج، السعر، الباركود، الكود الداخلي) على طابعة ملصقات (رول) بمقاسات 38×25 و40×30 و50×25 و50×30 و58×40 أو مقاس مخصوص، أو على ورق ملصقات A4 (3×7 و3×8 و4×10 و5×13 أو شبكة مخصوصة) مع «ابدأ من الملصق رقم» وورقة اختبار للحدود.
+- طباعة ملصقات الباركود (الاسم التجاري، اسم المنتج، السعر، الباركود، الكود الداخلي) على طابعة ملصقات (رول) بمقاسات 38×25 و40×30 و50×25 و50×30 و58×40 أو مقاس مخصوص، أو على ورق ملصقات A4 (3×7 و3×8 و4×10 و5×13 أو شبكة مخصوصة) مع «ابدأ من الملصق رقم» وورقة اختبار للحدود.
 - صلاحية جديدة «طباعة ملصقات الباركود»: المالك والمدير وأمين المخزن عندهم، والكاشير لا. أقصى عدد 2000 ملصق في المرة.
 - إعدادات الجهاز: طابعة الملصقات، إزاحة ومسافة بين الملصقات، وكتم أصوات المسح.
-- «نوع السعر الافتراضي في البيع» في بيانات المحل: قطاعي أو جملة. أي منتج يضاف بالضغط أو بالسكانر يتسعّر بالنوع ده.
+- «نوع السعر الافتراضي في البيع» في بيانات المنشأة: قطاعي أو جملة. أي منتج يضاف بالضغط أو بالسكانر يتسعّر بالنوع ده.
 
 ### en
 - A barcode for every product: scan the factory barcode into the product page, or press "Generate barcode" for an in-store one (it starts with 2). Up to 5 barcodes per product, and no barcode is shared by two products.
@@ -30,10 +48,10 @@ Every version has a section. The Arabic and English lists are what the "what's n
 - Selling by scanner: scan a product in cash sales, credit sales and purchases and it is added with quantity 1; scan it again and the quantity goes up by 1. An unknown barcode gets a warning and a sound, and can be added as a new product right away.
 - Returns: scan the receipt barcode (the invoice number) to open the invoice, and scan any product in it to add 1 to the return quantity, up to what is returnable.
 - The scanner works even when the keyboard is on Arabic, and with Arabic or Persian digits.
-- Print barcode labels (shop name, product name, price, barcode, internal code) on a label printer (roll) in 38×25, 40×30, 50×25, 50×30, 58×40 or a custom size, or on A4 sticker sheets (3×7, 3×8, 4×10, 5×13 or a custom grid) with "Start at label N" and an outline test sheet.
+- Print barcode labels (business name, product name, price, barcode, internal code) on a label printer (roll) in 38×25, 40×30, 50×25, 50×30, 58×40 or a custom size, or on A4 sticker sheets (3×7, 3×8, 4×10, 5×13 or a custom grid) with "Start at label N" and an outline test sheet.
 - New permission "Print barcode labels": owner, manager and storekeeper have it, the cashier does not. At most 2,000 labels per job.
 - Device settings: the label printer, offsets and the gap between labels, and muting the scan sounds.
-- "Default price type in sales" in the shop profile: retail or wholesale. Any product added by click or by scanner is priced with that type.
+- "Default price type in sales" in the business details: retail or wholesale. Any product added by click or by scanner is priced with that type.
 
 ## 1.0.0 - 2026-11-14
 

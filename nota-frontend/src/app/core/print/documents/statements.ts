@@ -105,7 +105,7 @@ export function customerStatement(ctx: PrintContext, data: CustomerStatementData
     <table class="t" style="width:380px" data-aging><tbody>${agingRows.map(([label, value]) => `<tr><td>${label}</td><td class="n">${money(ctx, value)}</td></tr>`).join('')}</tbody></table>
   </div>
   <div class="box keep" style="font-size:13px;line-height:1.8" data-acknowledgment>${acknowledgment}</div>
-  ${closing(ctx, [{ who: pick(ctx, 'توقيع العميل بالموافقة', 'Customer signature (approval)'), line: '.....................' }].concat([{ who: pick(ctx, 'عن المحل', 'For the shop'), line: pick(ctx, 'الاسم والتوقيع', 'Name and signature') }]))}`);
+  ${closing(ctx, [{ who: pick(ctx, 'توقيع العميل بالموافقة', 'Customer signature (approval)'), line: '.....................' }].concat([{ who: pick(ctx, 'عن المنشأة', 'For the business'), line: pick(ctx, 'الاسم والتوقيع', 'Name and signature') }]))}`);
   return { paper: 'A4', title: `${pick(ctx, 'كشف حساب', 'Statement')} ${data.customer.name}`, body, pageNumbers: true };
 }
 
@@ -139,7 +139,7 @@ export function supplierStatement(ctx: PrintContext, data: SupplierStatementData
   <div class="muted keep" style="font-size:12px">${pick(ctx, 'دائن = بضاعة اشتريناها من المورد · مدين = فلوس دفعناها له. الرصيد الموجب = مبلغ مستحق للمورد علينا.', 'Credit = goods we bought from the supplier · Debit = money we paid them. A positive balance = an amount we owe the supplier.')}</div>
   <div class="grow"></div>
   ${closing(ctx, [
-    { who: pick(ctx, 'عن المحل', 'For the shop'), line: pick(ctx, 'الاسم والتوقيع', 'Name and signature') },
+    { who: pick(ctx, 'عن المنشأة', 'For the business'), line: pick(ctx, 'الاسم والتوقيع', 'Name and signature') },
     { who: pick(ctx, 'عن المورد (مطابقة الرصيد)', 'For the supplier (balance confirmation)'), line: pick(ctx, 'الاسم والتوقيع والختم', 'Name, signature and stamp') },
   ])}`);
   return { paper: 'A4', title: `${pick(ctx, 'كشف حساب', 'Statement')} ${data.supplier.name}`, body, pageNumbers: true };

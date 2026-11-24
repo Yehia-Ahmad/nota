@@ -43,7 +43,7 @@ const PERMISSIONS = {
   "reports.profit": { group: "reports", ar: "تقارير الأرباح", en: "Profit reports" },
   "dashboard.view": { group: "reports", ar: "عرض لوحة التحكم", en: "View the dashboard" },
 
-  "shop.manage": { group: "admin", ar: "إدارة بيانات المتجر", en: "Manage shop profile" },
+  "shop.manage": { group: "admin", ar: "إدارة بيانات المنشأة", en: "Manage business details" },
   "users.manage": { group: "admin", ar: "إدارة المستخدمين والصلاحيات", en: "Manage users and permissions" },
   "audit.view": { group: "admin", ar: "عرض سجل العمليات", en: "View the audit log" },
   // Reserved for Stage 15 (backup and restore through Electron IPC). No backend route uses it yet.

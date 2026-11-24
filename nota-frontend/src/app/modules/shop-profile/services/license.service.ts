@@ -20,13 +20,15 @@ export interface RevokedClient {
 
 export interface LicenseInfo {
   licenseId: string;
-  /** Only 'lifetime' exists today. */
+  /** 'lifetime' or 'trial'. */
   type: string;
   shopName: string;
   shopNameEn: string | null;
   machineId: string;
   maxClients: number;
   issuedAt: string;
+  /** Trial only: when it ends (ISO). */
+  expiresAt?: string;
   clientsUsed: number;
   clients: PairedClient[];
   /** Absent on an older backend. */

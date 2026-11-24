@@ -11,7 +11,7 @@ const path = require('node:path');
 const test = require('node:test');
 const { pathToFileURL } = require('node:url');
 
-const { IPC_RULES, SESSION } = require('../lib/ipc-guard');
+const { IPC_RULES, LOCAL_SESSION, SESSION } = require('../lib/ipc-guard');
 const { createPrintHandlers } = require('../lib/print-handlers');
 const { PrintError, createPrintService, normalizeSettings, readSettings, safeFileName, validateJob } = require('../lib/print-service');
 
@@ -339,20 +339,40 @@ function handlerHarness(permissions, { me } = {}) {
 }
 const TOKEN = 'valid-token-0123456789';
 
-test('every print channel is guarded in the main process: no token or an expired one → SESSION_EXPIRED and nothing runs', async () => {
+test('every print channel requires a well-formed token; server-guarded channels also reject an expired token', async () => {
   const { calls, handlers } = handlerHarness(['sales.create']);
   const jobs = { 'print:printers': [], 'print:settings-get': [], 'print:settings-set': [{}], 'print:test-page': [{}], 'print:print': [{}], 'print:labels': [{}], 'print:pdf': [{}, {}] };
   for (const [channel, args] of Object.entries(jobs)) {
-    for (const token of [undefined, '', 'short', 'x'.repeat(20)]) {
+    for (const token of [undefined, '', 'short']) {
       const result = await handlers[channel](token, ...args);
       assert.equal(result.ok, false, `${channel} ${String(token)}`);
       assert.equal(result.error.code, 'SESSION_EXPIRED');
     }
   }
+  for (const [channel, args] of Object.entries(jobs).filter(([channel]) => channel !== 'print:pdf')) {
+    const result = await handlers[channel]('x'.repeat(20), ...args);
+    assert.equal(result.ok, false, `${channel} expired token`);
+    assert.equal(result.error.code, 'SESSION_EXPIRED');
+  }
   assert.deepEqual(calls, [], 'the service was never called');
 });
 
-test('print:settings-set and print:test-page need shop.manage; printing, PDF, the printer list and reading the settings need only a session', async () => {
+test('PDF save runs locally when the backend is unavailable; other session actions still ask the backend', async () => {
+  const calls = [];
+  const service = { savePdf: async (...args) => { calls.push(args); return { saved: true }; } };
+  const handlers = createPrintHandlers({
+    service,
+    backend: () => ({ me: async () => { throw Object.assign(new Error('busy'), { code: 'SERVER_BUSY' }); } }),
+    log: quietLog,
+  });
+  const pdf = await handlers['print:pdf'](TOKEN, { html: HTML, paper: 'A4' }, { suggestedName: 'invoice' });
+  assert.deepEqual(pdf, { ok: true, value: { saved: true } });
+  assert.deepEqual(calls, [[{ html: HTML, paper: 'A4' }, { suggestedName: 'invoice' }]]);
+  const printers = await handlers['print:printers'](TOKEN);
+  assert.deepEqual([printers.ok, printers.error.code], [false, 'SERVER_BUSY']);
+});
+
+test('print:settings-set and print:test-page need shop.manage; printing, the printer list and reading the settings need a server session', async () => {
   const cashier = handlerHarness(['sales.create']);
   for (const channel of ['print:settings-set', 'print:test-page']) {
     const result = await cashier.handlers[channel](TOKEN, { receiptPrinter: 'x' });
@@ -379,7 +399,8 @@ test('a print error comes back as { ok: false, error } with its Arabic message a
 test('the six print channels have IPC rules, the preload exposes them with the token first, and main.js registers them', () => {
   assert.equal(IPC_RULES['print:settings-set'], 'shop.manage');
   assert.equal(IPC_RULES['print:test-page'], 'shop.manage');
-  for (const channel of ['print:printers', 'print:settings-get', 'print:print', 'print:pdf']) assert.equal(IPC_RULES[channel], SESSION, channel);
+  for (const channel of ['print:printers', 'print:settings-get', 'print:print']) assert.equal(IPC_RULES[channel], SESSION, channel);
+  assert.equal(IPC_RULES['print:pdf'], LOCAL_SESSION);
   const preload = fs.readFileSync(path.join(root, 'preload.js'), 'utf8');
   for (const channel of Object.keys(IPC_RULES).filter((name) => name.startsWith('print:'))) assert.ok(preload.includes(`'${channel}', token`), `preload: ${channel}`);
   const main = fs.readFileSync(path.join(root, 'main.js'), 'utf8');

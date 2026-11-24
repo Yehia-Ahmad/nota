@@ -120,6 +120,12 @@
   resize: vertical;
 }
 
+/* Trial licenses: while the trial is over, controls that write data are disabled (core/license/read-only-ui.ts). */
+.nota-readonly [data-readonly] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .nota-hint {
   font-size: 12px;
   color: var(--text-muted);

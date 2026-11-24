@@ -9,6 +9,8 @@ const metaSchema = new mongoose.Schema({
   // Stage 25: the app version that last started on this data (the "from" of the next pre-upgrade backup's name).
   appVersion: { type: String, default: undefined },
   appBuild: { type: String, default: undefined },
+  // Trial licenses: the highest wall-clock time this PC has seen (Meta "clock"), for the clock-rollback check (license/trial.js).
+  highestSeenAt: { type: Date, default: undefined },
   ledgerStartAt: { type: Date, default: undefined },
   // Stage 22: period closing. lockedThrough = the last closed business day (a UTC-midnight date); nothing may post on or before it.
   // touchedAt is written by back-dated postings so a concurrent close conflicts with them and one retries.

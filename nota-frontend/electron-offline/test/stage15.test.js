@@ -318,7 +318,7 @@ test('setup: findOtherMainPcs filters the own id; no other main PC → no warnin
 test('setup: another main PC → the warning names it and pre-fills the client form ("use as client")', () => {
   const warning = mainPcWarning([OTHER]);
   assert.match(warning.message, /فيه جهاز رئيسي تاني شغال على الشبكة \(محل تاني \/ 192\.168\.1\.20:5055\)/);
-  assert.match(warning.message, /لازم يكون فيه جهاز رئيسي واحد بس في المحل، وإلا البيانات هتتقسم على جهازين\./);
+  assert.match(warning.message, /لازم يكون فيه جهاز رئيسي واحد بس، وإلا البيانات هتتقسم على جهازين\./);
   assert.deepEqual(warning.prefill, { host: '192.168.1.20', port: 5055, shopName: 'محل تاني' });
   const two = mainPcWarning([OTHER, { ...OTHER, instanceId: 'x', address: '192.168.1.30', shopName: '' }]);
   assert.equal(two.count, 2);
